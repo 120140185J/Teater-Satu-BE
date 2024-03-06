@@ -12,6 +12,7 @@ const profileRouter = require('./routes/profileRoutes');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errController');
 
+// test update
 const app = express();
 
 // add cors
