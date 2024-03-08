@@ -50,6 +50,18 @@ exports.login = catchAsync(async (req, res, next) => {
   createSendToken(user, 200, res);
 });
 
+exports.subscription = catchAsync(async (req, res, next) => {
+  const { id } = req.body;
+
+  if (!id) {
+    return next(new AppError('Mohon masukan email dan password anda', 400));
+  }
+
+  const subscription = await User.findOne({ where: { id } });
+
+  createSendToken(subscription, 200, res);
+});
+
 exports.protect = catchAsync(async (req, res, next) => {
   // getting token and check of it's there
   let token;

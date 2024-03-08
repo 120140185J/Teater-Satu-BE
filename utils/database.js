@@ -1,8 +1,9 @@
 require('dotenv').config();
 const { Sequelize } = require('sequelize');
 
-const sequelize = new Sequelize(process.env.DATABASE_URL_PROD, {
-  dialect: process.env.DIALECT_PROD,
+// dialect prod untuk production
+const sequelize = new Sequelize(process.env.DATABASE_URL_LOCAL, {
+  dialect: process.env.DIALECT_LOCAL,
 });
 
 const testConnection = async () => {
