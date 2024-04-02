@@ -1,7 +1,7 @@
 const { DataTypes, Model } = require('sequelize');
 const bcrypt = require('bcryptjs');
 const sequelize = require('../utils/database');
-const { subscription } = require('../controllers/authController');
+// const { subscription } = require('../controllers/authController');
 
 const User = sequelize.define(
   'User',
@@ -35,8 +35,9 @@ const User = sequelize.define(
       allowNull: true,
     },
     subscription: {
-      type: DataTypes.STRING,
+      type: DataTypes.BOOLEAN,
       allowNull: true,
+      defaultValue: false,
     },
   },
   { timestamps: false }

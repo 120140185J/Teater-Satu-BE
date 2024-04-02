@@ -57,9 +57,22 @@ exports.subscription = catchAsync(async (req, res, next) => {
     return next(new AppError('Mohon masukan email dan password anda', 400));
   }
 
-  const subscription = await User.findOne({ where: { id } });
+  const updatedUser = await User.findByIdAndUpdate(
+    id,
+    { subscription: true },
+    { new: true }
+  );
 
-  createSendToken(subscription, 200, res);
+  if (!updatedUser) {
+    return next(new AppError('User tidak ditemukan', 404));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      subscription: updatedUser.subscription,
+    },
+  });
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
