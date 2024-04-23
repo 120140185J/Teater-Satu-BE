@@ -1,6 +1,7 @@
 const { DataTypes, Model } = require('sequelize');
 const bcrypt = require('bcryptjs');
 const sequelize = require('../utils/database');
+const { subscription } = require('../controllers/authController');
 
 const User = sequelize.define(
   'User',
@@ -30,6 +31,10 @@ const User = sequelize.define(
       defaultValue: 'user',
     },
     photo: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    subscription: {
       type: DataTypes.STRING,
       allowNull: true,
     },

@@ -7,7 +7,6 @@ const userController = require('../controllers/userController');
 
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
-router.post('/subscription', authController.subscription);
 
 router.patch(
   '/update-photo/:id',
