@@ -3,7 +3,7 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const fileHelper = require('../utils/fileHelper');
 
-const galeri = require('../models/galeriModel');
+const Galeri = require('../models/galeriModel');
 const handlerFactory = require('./handlerFactory');
 require('dotenv').config();
 
@@ -14,7 +14,7 @@ const upload = multer({
 exports.uploadGaleriPhoto = upload.single('gambar_galeri');
 
 exports.getAllGaleri = catchAsync(async (req, res, next) => {
-  const galeri = await galeri.findAll();
+  const galeri = await Galeri.findAll();
 
   res.status(200).json({
     status: 'success',
@@ -38,7 +38,7 @@ exports.createGaleri = catchAsync(async (req, res, next) => {
     url = uploadedFile.secure_url;
   }
 
-  const galeri = await galeri.create({
+  const galeri = await Galeri.create({
     nama,
     harga,
     kategori,
@@ -58,7 +58,7 @@ exports.updateGaleri = catchAsync(async (req, res, next) => {
   const { file } = req;
 
   // Find the berita record by ID
-  const galeri = await galeri.findByPk(req.params.id);
+  const galeri = await Galeri.findByPk(req.params.id);
 
   if (!galeri) {
     return next(new AppError('No document found with that ID', 404));
@@ -70,10 +70,7 @@ exports.updateGaleri = catchAsync(async (req, res, next) => {
   if (kategori) galeri.kategori = kategori;
 
   if (file) {
-    const uploadedFile = await fileHelper.upload(
-      file.buffer,
-      galeri.photo_url
-    );
+    const uploadedFile = await fileHelper.upload(file.buffer, galeri.photo_url);
     if (!uploadedFile) {
       return next(new AppError('Error uploading file', 400));
     }
@@ -90,7 +87,7 @@ exports.updateGaleri = catchAsync(async (req, res, next) => {
 });
 
 exports.getGaleri = catchAsync(async (req, res, next) => {
-  const galeri = await galeri.findByPk(req.params.id);
+  const galeri = await Galeri.findByPk(req.params.id);
 
   if (!galeri) {
     return next(new AppError('No document found with that ID', 404));
@@ -102,4 +99,4 @@ exports.getGaleri = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.deleteGaleri = handlerFactory.deleteOne(galeri);
+exports.deleteGaleri = handlerFactory.deleteOne(Galeri);

@@ -1,17 +1,17 @@
 const express = require('express');
-const beritaController = require('../controllers/galeriController');
+const galeriController = require('../controllers/galeriController');
 
 const router = express.Router();
 
 router
   .route('/')
-  .get(beritaController.getAllGaleri)
-  .post(beritaController.uploadGaleriPhoto, beritaController.createGaleri);
+  .get(galeriController.getAllGaleri)
+  .post(galeriController.uploadGaleriPhoto, galeriController.createGaleri);
 
 router
   .route('/:id')
-  .get(beritaController.getGaleri)
-  .patch(beritaController.uploadGaleriPhoto, beritaController.updateGaleri)
-  .delete(beritaController.deleteGaleri);
+  .get(galeriController.getGaleri)
+  .patch(galeriController.uploadGaleriPhoto, galeriController.updateGaleri)
+  .delete(galeriController.deleteGaleri);
 
 module.exports = router;
