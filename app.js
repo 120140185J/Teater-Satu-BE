@@ -30,6 +30,7 @@ app.use('/api/v1/classes', classRouter);
 app.use('/api/v1/students', studentRouter);
 app.use('/api/v1/profiles', profileRouter);
 app.use('/api/v1/products', productRouter);
+app.use('/api/v1/galeris', galeriRouter);
 
 app.use('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
