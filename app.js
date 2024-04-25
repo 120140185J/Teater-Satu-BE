@@ -10,6 +10,7 @@ const studentRouter = require('./routes/studentRoutes');
 const classRouter = require('./routes/classRoutes');
 const profileRouter = require('./routes/profileRoutes');
 const productRouter = require('./routes/productRoutes');
+const galeriRouter = require('./routes/galeriRoutes');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errController');
 
