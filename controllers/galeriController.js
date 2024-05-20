@@ -24,7 +24,7 @@ exports.getAllGaleri = catchAsync(async (req, res, next) => {
 });
 
 exports.createGaleri = catchAsync(async (req, res, next) => {
-  const { nama, harga, kategori } = req.body;
+  const { nama, tanggal, tempat, deskripsi } = req.body;
   const { file } = req;
 
   let url = '';
@@ -40,9 +40,10 @@ exports.createGaleri = catchAsync(async (req, res, next) => {
 
   const galeri = await Galeri.create({
     nama,
-    harga,
-    kategori,
+    tanggal,
+    tempat,
     gambar_galeri: url,
+    deskripsi,
   });
 
   res.status(201).json({
@@ -54,7 +55,7 @@ exports.createGaleri = catchAsync(async (req, res, next) => {
 });
 
 exports.updateGaleri = catchAsync(async (req, res, next) => {
-  const { nama, harga, kategori } = req.body;
+  const { nama, tanggal, tempat, deskripsi } = req.body;
   const { file } = req;
 
   // Find the berita record by ID
@@ -66,8 +67,9 @@ exports.updateGaleri = catchAsync(async (req, res, next) => {
 
   // Update the berita record with the new data
   if (nama) galeri.nama = nama;
-  if (harga) galeri.harga = harga;
-  if (kategori) galeri.kategori = kategori;
+  if (tanggal) galeri.tanggal = tanggal;
+  if (tempat) galeri.tempat = tempat;
+  if (deskripsi) galeri.deskripsi = deskripsi;
 
   if (file) {
     const uploadedFile = await fileHelper.upload(file.buffer, galeri.photo_url);
@@ -75,7 +77,7 @@ exports.updateGaleri = catchAsync(async (req, res, next) => {
       return next(new AppError('Error uploading file', 400));
     }
 
-    galeri.gambar_Galeri = uploadedFile.secure_url;
+    galeri.gambar_galeri = uploadedFile.secure_url;
   }
 
   await galeri.save();

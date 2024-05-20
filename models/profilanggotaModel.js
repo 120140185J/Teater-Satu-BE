@@ -1,8 +1,8 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../utils/database');
 
-const Galeri = sequelize.define(
-  'Galeri',
+const Profilanggota = sequelize.define(
+  'Profilanggota',
   {
     id: {
       type: DataTypes.UUID,
@@ -13,24 +13,19 @@ const Galeri = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    tanggal: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    tempat: {
+    photo: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
-    gambar_galeri: {
+    jabatan: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     deskripsi: {
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING,
       allowNull: false,
     },
   },
-  { timestamps: false }
 );
 
-module.exports = Galeri;
+module.exports = Profilanggota;
