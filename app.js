@@ -12,6 +12,8 @@ const profileRouter = require('./routes/profileRoutes');
 const productRouter = require('./routes/productRoutes');
 const galeriRouter = require('./routes/galeriRoutes');
 const profilAnggotaRouter = require('./routes/profilanggotaRoutes');
+const merchRouter = require('./routes/merchRoutes');
+const sewaRouter = require('./routes/sewaRoutes');
 const programRouter = require('./routes/programRoutes');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errController');
@@ -35,6 +37,8 @@ app.use('/api/v1/products', productRouter);
 app.use('/api/v1/galeris', galeriRouter);
 app.use('/api/v1/programs', programRouter);
 app.use('/api/v1/profilanggotas', profilAnggotaRouter);
+app.use('/api/v1/merchs', merchRouter);
+app.use('/api/v1/sewas', sewaRouter);
 
 app.use('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
