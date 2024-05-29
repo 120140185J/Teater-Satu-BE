@@ -54,23 +54,21 @@ exports.subscription = catchAsync(async (req, res, next) => {
   const { id } = req.body;
 
   if (!id) {
-    return next(new AppError('Mohon masukan email dan password anda', 400));
+    return next(new AppError('Mohon masukan id', 400));
   }
 
-  const updatedUser = await User.findByIdAndUpdate(
-    id,
-    { subscription: true },
-    { new: true }
-  );
+  const hasil = await User.findByPk(id, {
+    attributes: ['subscription'],
+  });
 
-  if (!updatedUser) {
+  if (!hasil) {
     return next(new AppError('User tidak ditemukan', 404));
   }
 
   res.status(200).json({
     status: 'success',
     data: {
-      subscription: updatedUser.subscription,
+      subscription: hasil.dataValues.subscription,
     },
   });
 });
