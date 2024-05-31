@@ -13,7 +13,19 @@ const Product = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    tersedia: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
     harga: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    deskripsi: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    quantity: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
