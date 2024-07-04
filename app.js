@@ -42,6 +42,10 @@ app.use('/api/v1/merchs', merchRouter);
 app.use('/api/v1/sewas', sewaRouter);
 app.use('/api/v1/image', imageRouter);
 
+<body>
+  Teater Satu Backend
+</body>
+
 app.use('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
