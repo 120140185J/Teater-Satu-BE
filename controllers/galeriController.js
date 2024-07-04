@@ -1,17 +1,9 @@
-const multer = require('multer');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
-const fileHelper = require('../utils/fileHelper');
 
 const Galeri = require('../models/galeriModel');
 const handlerFactory = require('./handlerFactory');
 require('dotenv').config();
-
-const upload = multer({
-  storage: multer.memoryStorage(),
-});
-
-exports.uploadGaleriPhoto = upload.single('gambar_galeri');
 
 exports.getAllGaleri = catchAsync(async (req, res, next) => {
   const galeri = await Galeri.findAll();
@@ -24,25 +16,13 @@ exports.getAllGaleri = catchAsync(async (req, res, next) => {
 });
 
 exports.createGaleri = catchAsync(async (req, res, next) => {
-  const { nama, tanggal, tempat, deskripsi } = req.body;
-  const { file } = req;
-
-  let url = '';
-
-  if (file) {
-    const uploadedFile = await fileHelper.upload(file.buffer);
-    if (!uploadedFile) {
-      return next(new AppError('Error uploading file', 400));
-    }
-
-    url = uploadedFile.secure_url;
-  }
+  const { nama, tanggal, tempat, deskripsi, gambarGaleri } = req.body;
 
   const galeri = await Galeri.create({
     nama,
     tanggal,
     tempat,
-    gambar_galeri: url,
+    gambarGaleri,
     deskripsi,
   });
 
@@ -55,8 +35,7 @@ exports.createGaleri = catchAsync(async (req, res, next) => {
 });
 
 exports.updateGaleri = catchAsync(async (req, res, next) => {
-  const { nama, tanggal, tempat, deskripsi } = req.body;
-  const { file } = req;
+  const { nama, tanggal, tempat, deskripsi, gambarGaleri } = req.body;
 
   // Find the berita record by ID
   const galeri = await Galeri.findByPk(req.params.id);
@@ -70,15 +49,7 @@ exports.updateGaleri = catchAsync(async (req, res, next) => {
   if (tanggal) galeri.tanggal = tanggal;
   if (tempat) galeri.tempat = tempat;
   if (deskripsi) galeri.deskripsi = deskripsi;
-
-  if (file) {
-    const uploadedFile = await fileHelper.upload(file.buffer, galeri.photo_url);
-    if (!uploadedFile) {
-      return next(new AppError('Error uploading file', 400));
-    }
-
-    galeri.gambar_galeri = uploadedFile.secure_url;
-  }
+  if (gambarGaleri) galeri.gambarGaleri = gambarGaleri;
 
   await galeri.save();
 

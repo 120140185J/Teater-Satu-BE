@@ -6,12 +6,12 @@ const router = express.Router();
 router
   .route('/')
   .get(galeriController.getAllGaleri)
-  .post(galeriController.uploadGaleriPhoto, galeriController.createGaleri);
+  .post(galeriController.createGaleri);
 
 router
   .route('/:id')
   .get(galeriController.getGaleri)
-  .patch(galeriController.uploadGaleriPhoto, galeriController.updateGaleri)
+  .patch(galeriController.updateGaleri)
   .delete(galeriController.deleteGaleri);
 
 module.exports = router;

@@ -21,7 +21,7 @@ const Galeri = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    gambar_galeri: {
+    gambarGaleri: {
       type: DataTypes.STRING,
       allowNull: false,
     },
