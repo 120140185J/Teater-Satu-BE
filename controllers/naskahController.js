@@ -3,7 +3,7 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const fileHelper = require('../utils/fileHelper');
 
-const Sewa = require('../models/sewaModel');
+const Naskah = require('../models/naskahModel');
 const handlerFactory = require('./handlerFactory');
 require('dotenv').config();
 
@@ -11,20 +11,20 @@ const upload = multer({
   storage: multer.memoryStorage(),
 });
 
-exports.uploadSewaPhoto = upload.single('gambar_sewa');
+exports.uploadNaskahPhoto = upload.single('gambar_naskah');
 
-exports.getAllSewa = catchAsync(async (req, res, next) => {
-  const sewa = await Sewa.findAll();
+exports.getAllNaskah = catchAsync(async (req, res, next) => {
+  const naskah = await Naskah.findAll();
 
   res.status(200).json({
     status: 'success',
-    results: sewa.length,
-    data: sewa,
+    results: naskah.length,
+    data: naskah,
   });
 });
 
-exports.createSewa = catchAsync(async (req, res, next) => {
-  const { nama, harga, kategori } = req.body;
+exports.createNaskah = catchAsync(async (req, res, next) => {
+  const { namaNaskah, pengarang, isiNaskah } = req.body;
   const { file } = req;
 
   let url = '';
@@ -38,68 +38,69 @@ exports.createSewa = catchAsync(async (req, res, next) => {
     url = uploadedFile.secure_url;
   }
 
-  const sewa = await Sewa.create({
-    nama,
-    harga,
-    kategori,
-    gambar_sewa: url,
+  const naskah = await Naskah.create({
+    namaNaskah,
+    fotoThumbnail: url,
+    pengarang,
+    isiNaskah,
   });
 
   res.status(201).json({
     status: 'success',
     data: {
-      sewa,
+      naskah,
     },
   });
 });
 
-exports.updateSewa = catchAsync(async (req, res, next) => {
-  const { nama, harga, kategori } = req.body;
+exports.updateNaskah = catchAsync(async (req, res, next) => {
+  const { namaNaskah, pengarang, isiNaskah } = req.body;
   const { file } = req;
 
   // Find the berita record by ID
-  const sewa = await Sewa.findByPk(req.params.id);
+  const naskah = await Naskah.findByPk(req.params.id);
 
-  if (!sewa) {
+  if (!naskah) {
     return next(new AppError('No document found with that ID', 404));
   }
 
   // Update the berita record with the new data
-  if (nama) sewa.nama = nama;
-  if (harga) sewa.harga = harga;
-  if (kategori) sewa.kategori = kategori;
+  if (namaNaskah) naskah.namaNaskah = namaNaskah;
+  if (pengarang) naskah.pengarang = pengarang;
+  if (isiNaskah) naskah.isiNaskah = isiNaskah;
+  
 
   if (file) {
     const uploadedFile = await fileHelper.upload(
       file.buffer,
-      sewa.photo_url
+      naskah.photo_url
     );
     if (!uploadedFile) {
       return next(new AppError('Error uploading file', 400));
     }
 
-    sewa.gambar_sewa = uploadedFile.secure_url;
+    naskah.foto = uploadedFile.secure_url;
   }
 
-  await sewa.save();
+  await naskah.save();
 
   res.status(200).json({
     status: 'success',
-    data: sewa,
+    data: naskah,
   });
 });
 
-exports.getSewa = catchAsync(async (req, res, next) => {
-  const sewa = await Sewa.findByPk(req.params.id);
+exports.getNaskah = catchAsync(async (req, res, next) => {
+  const naskah = await Naskah.findByPk(req.params.id);
 
-  if (!sewa) {
+  if (!naskah) {
     return next(new AppError('No document found with that ID', 404));
   }
 
   res.status(200).json({
     status: 'success',
-    data: sewa,
+    data: naskah,
   });
 });
 
-exports.deleteSewa = handlerFactory.deleteOne(Sewa);
+exports.deleteNaskah = handlerFactory.deleteOne(Naskah);
