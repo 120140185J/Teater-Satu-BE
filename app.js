@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
+const fs = require('fs');
 
 const userRouter = require('./routes/userRoutes');
 const teacherRouter = require('./routes/teacherRoutes');
@@ -41,10 +42,6 @@ app.use('/api/v1/profilanggotas', profilAnggotaRouter);
 app.use('/api/v1/merchs', merchRouter);
 app.use('/api/v1/sewas', sewaRouter);
 app.use('/api/v1/image', imageRouter);
-
-<body>
-  Teater Satu Backend
-</body>
 
 app.use('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
