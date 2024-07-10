@@ -3,17 +3,14 @@ const morgan = require('morgan');
 const cors = require('cors');
 
 const userRouter = require('./routes/userRoutes');
-const teacherRouter = require('./routes/teacherRoutes');
 const beritaRouter = require('./routes/beritaRoutes');
 const kategoriRouter = require('./routes/kategoriRoutes');
-const studentRouter = require('./routes/studentRoutes');
-const classRouter = require('./routes/classRoutes');
 const profileRouter = require('./routes/profileRoutes');
 const productRouter = require('./routes/productRoutes');
 const galeriRouter = require('./routes/galeriRoutes');
 const profilAnggotaRouter = require('./routes/profilanggotaRoutes');
 const merchRouter = require('./routes/merchRoutes');
-const sewaRouter = require('./routes/sewaRoutes');
+const naskahRouter = require('./routes/naskahRoutes');
 const imageRouter = require('./routes/imageRoutes');
 const programRouter = require('./routes/programRoutes');
 const AppError = require('./utils/appError');
@@ -28,23 +25,17 @@ if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
 app.use(express.json());
 
 app.use('/api/v1/users', userRouter);
-app.use('/api/v1/teachers', teacherRouter);
 app.use('/api/v1/beritas', beritaRouter);
 app.use('/api/v1/kategoris', kategoriRouter);
-app.use('/api/v1/classes', classRouter);
-app.use('/api/v1/students', studentRouter);
 app.use('/api/v1/profiles', profileRouter);
 app.use('/api/v1/products', productRouter);
 app.use('/api/v1/galeris', galeriRouter);
 app.use('/api/v1/programs', programRouter);
 app.use('/api/v1/profilanggotas', profilAnggotaRouter);
 app.use('/api/v1/merchs', merchRouter);
-app.use('/api/v1/sewas', sewaRouter);
+app.use('/api/v1/naskahs', naskahRouter);
 app.use('/api/v1/image', imageRouter);
 
-<body>
-  Teater Satu Backend
-</body>
 
 app.use('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
