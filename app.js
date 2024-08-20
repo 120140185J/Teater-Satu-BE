@@ -1,7 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
-const fs = require('fs');
 
 const userRouter = require('./routes/userRoutes');
 const beritaRouter = require('./routes/beritaRoutes');
@@ -15,12 +14,11 @@ const profilAnggotaRouter = require('./routes/profilanggotaRoutes');
 const merchRouter = require('./routes/merchRoutes');
 const naskahRouter = require('./routes/naskahRoutes');
 const imageRouter = require('./routes/imageRoutes');
-const landingpageimageRouter = require('./routes/landingpageimageRoutes');
+// const landingpageimageRouter = require('./routes/landingpageimageRoutes');
 const programRouter = require('./routes/programRoutes');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errController');
 
-// test update
 const app = express();
 
 // add cors
@@ -28,6 +26,12 @@ app.use(cors());
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
 app.use(express.json());
 
+app.get('/', (req, res) => {
+  res.status(200).json({
+    status: 'success',
+    message: 'Welcome to API',
+  });
+});
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/beritas', beritaRouter);
 app.use('/api/v1/beritakolaborasis', beritaKolaborasiRouter);
@@ -41,7 +45,7 @@ app.use('/api/v1/profilanggotas', profilAnggotaRouter);
 app.use('/api/v1/merchs', merchRouter);
 app.use('/api/v1/naskahs', naskahRouter);
 app.use('/api/v1/image', imageRouter);
-app.use('/api/v1/landingpageimages', landingpageimageRouter);
+// app.use('/api/v1/landingpageimages', landingpageimageRouter);
 
 app.use('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

@@ -6,13 +6,6 @@ process.on('uncaughtException', (err) => {
   process.exit(1);
 });
 
-app.get('/', (req, res) => {
-  res.status(200).json({
-    status: 'success',
-    message: 'Welcome to API',
-  });
-});
-
 dotenv.config({
   path: './.env',
 });
