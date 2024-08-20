@@ -13,14 +13,6 @@ const Galeri = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    tanggal: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    tempat: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     gambarGaleri: {
       type: DataTypes.STRING,
       allowNull: false,

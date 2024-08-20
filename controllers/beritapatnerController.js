@@ -3,7 +3,7 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const fileHelper = require('../utils/fileHelper');
 
-const Program = require('../models/programModel');
+const BeritaPatner = require('../models/beritapatnerModel');
 const handlerFactory = require('./handlerFactory');
 require('dotenv').config();
 
@@ -11,19 +11,19 @@ const upload = multer({
   storage: multer.memoryStorage(),
 });
 
-exports.uploadProgramPhoto = upload.single('photo_url');
+exports.uploadBeritaPatnerPhoto = upload.single('photo_url');
 
-exports.getAllProgram = catchAsync(async (req, res, next) => {
-  const program = await Program.findAll();
+exports.getAllBeritaPatner = catchAsync(async (req, res, next) => {
+  const beritapatner = await BeritaPatner.findAll({});
 
   res.status(200).json({
     status: 'success',
-    results: program.length,
-    data: program,
+    results: beritapatner.length,
+    data: beritapatner,
   });
 });
 
-exports.createProgram = catchAsync(async (req, res, next) => {
+exports.createBeritaPatner = catchAsync(async (req, res, next) => {
   const { title, description, summary } = req.body;
   const { file } = req;
 
@@ -38,7 +38,7 @@ exports.createProgram = catchAsync(async (req, res, next) => {
     url = uploadedFile.secure_url;
   }
 
-  const program = await Program.create({
+  const beritapatner = await BeritaPatner.create({
     title,
     description,
     summary,
@@ -48,58 +48,58 @@ exports.createProgram = catchAsync(async (req, res, next) => {
   res.status(201).json({
     status: 'success',
     data: {
-      program,
+      beritapatner,
     },
   });
 });
 
-exports.updateProgram = catchAsync(async (req, res, next) => {
+exports.updateBeritaPatner = catchAsync(async (req, res, next) => {
   const { title, description, summary } = req.body;
   const { file } = req;
 
   // Find the berita record by ID
-  const program = await Program.findByPk(req.params.id);
+  const beritapatner = await BeritaPatner.findByPk(req.params.id);
 
-  if (!program) {
+  if (!beritapatner) {
     return next(new AppError('No document found with that ID', 404));
   }
 
   // Update the berita record with the new data
-  if (title) program.title = title;
-  if (description) program.description = description;
-  if (summary) program.summary = summary;
+  if (title) beritapatner.title = title;
+  if (description) beritapatner.description = description;
+  if (summary) beritapatner.summary = summary;
 
   if (file) {
     const uploadedFile = await fileHelper.upload(
       file.buffer,
-      program.photo_url
+      beritapatner.photo_url
     );
     if (!uploadedFile) {
       return next(new AppError('Error uploading file', 400));
     }
 
-    program.photo_url = uploadedFile.secure_url;
+    beritapatner.photo_url = uploadedFile.secure_url;
   }
 
-  await program.save();
+  await beritapatner.save();
 
   res.status(200).json({
     status: 'success',
-    data: program,
+    data: beritapatner,
   });
 });
 
-exports.getProgram = catchAsync(async (req, res, next) => {
-  const program = await Program.findByPk(req.params.id);
+exports.getBeritaPatner = catchAsync(async (req, res, next) => {
+  const beritapatner = await BeritaPatner.findByPk(req.params.id, {});
 
-  if (!program) {
+  if (!beritapatner) {
     return next(new AppError('No document found with that ID', 404));
   }
 
   res.status(200).json({
     status: 'success',
-    data: program,
+    data: beritapatner,
   });
 });
 
-exports.deleteProgram = handlerFactory.deleteOne(Program);
+exports.deleteBeritaPatner = handlerFactory.deleteOne(BeritaPatner);

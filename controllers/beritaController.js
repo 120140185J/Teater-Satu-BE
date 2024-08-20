@@ -4,7 +4,6 @@ const AppError = require('../utils/appError');
 const fileHelper = require('../utils/fileHelper');
 
 const Berita = require('../models/beritaModel');
-const Kategori = require('../models/kategoriModel');
 const handlerFactory = require('./handlerFactory');
 require('dotenv').config();
 
@@ -16,7 +15,6 @@ exports.uploadBeritaPhoto = upload.single('photo_url');
 
 exports.getAllBerita = catchAsync(async (req, res, next) => {
   const berita = await Berita.findAll({
-    include: [Kategori],
   });
 
   res.status(200).json({
@@ -27,7 +25,7 @@ exports.getAllBerita = catchAsync(async (req, res, next) => {
 });
 
 exports.createBerita = catchAsync(async (req, res, next) => {
-  const { title, description, kategori } = req.body;
+  const { title, description, summary} = req.body;
   const { file } = req;
 
   let url = '';
@@ -41,24 +39,11 @@ exports.createBerita = catchAsync(async (req, res, next) => {
     url = uploadedFile.secure_url;
   }
 
-  let kategoriObj = await Kategori.findOne({ where: { name: kategori } });
-  // If the kategori does not exist, create a new one
-  if (!kategoriObj) {
-    kategoriObj = await Kategori.create({ name: kategori });
-  }
-
-  console.log({
-    title,
-    description,
-    photo_url: url,
-    kategori_id: kategoriObj.id,
-  });
-
   const berita = await Berita.create({
     title,
     description,
+    summary,
     photo_url: url,
-    kategori_id: kategoriObj.id,
   });
 
   res.status(201).json({
@@ -70,7 +55,7 @@ exports.createBerita = catchAsync(async (req, res, next) => {
 });
 
 exports.updateBerita = catchAsync(async (req, res, next) => {
-  const { title, description, kategori } = req.body;
+  const { title, description, summary} = req.body;
   const { file } = req;
 
   // Find the berita record by ID
@@ -83,18 +68,8 @@ exports.updateBerita = catchAsync(async (req, res, next) => {
   // Update the berita record with the new data
   if (title) berita.title = title;
   if (description) berita.description = description;
-  if (kategori) {
-    // Get the Kategori object based on the kategori name
-    let kategoriObj = await Kategori.findOne({ where: { name: kategori } });
-
-    // If the kategori does not exist, create a new one
-    if (!kategoriObj) {
-      kategoriObj = await Kategori.create({ name: kategori });
-    }
-
-    // Update the berita record with the kategori_id field
-    berita.kategori_id = kategoriObj.id;
-  }
+  if (summary) berita.summary = summary;
+  
   if (file) {
     const uploadedFile = await fileHelper.upload(file.buffer, berita.photo_url);
     if (!uploadedFile) {
@@ -114,7 +89,6 @@ exports.updateBerita = catchAsync(async (req, res, next) => {
 
 exports.getBerita = catchAsync(async (req, res, next) => {
   const berita = await Berita.findByPk(req.params.id, {
-    include: [Kategori],
   });
 
   if (!berita) {

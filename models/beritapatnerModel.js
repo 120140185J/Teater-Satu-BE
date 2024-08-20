@@ -1,8 +1,8 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../utils/database');
 
-const Program = sequelize.define(
-  'Program',
+const Berita = sequelize.define(
+  'BeritaPatner',
   {
     id: {
       type: DataTypes.UUID,
@@ -27,4 +27,4 @@ const Program = sequelize.define(
   { timestamps: true }
 );
 
-module.exports = Program;
+module.exports = Berita;

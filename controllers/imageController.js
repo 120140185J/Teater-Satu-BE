@@ -3,7 +3,6 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const fileHelper = require('../utils/fileHelper');
 
-const Image = require('../models/imageModel');
 require('dotenv').config();
 
 const multerStorage = multer.memoryStorage();
@@ -20,7 +19,7 @@ const upload = multer({
   storage: multerStorage,
   fileFilter: multerFilter,
   limits: {
-    fileSize: 1 * 1024 * 1024, // 1 MB
+    fileSize: 10 * 1024 * 1024, // 1 MB
   },
 });
 
@@ -40,14 +39,10 @@ exports.createImage = catchAsync(async (req, res, next) => {
     url = uploadedFile.secure_url;
   }
 
-  const image = await Image.create({
-    image: url,
-  });
-
   res.status(201).json({
     status: 'success',
     data: {
-      image,
+      url,
     },
   });
 });

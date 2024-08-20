@@ -1,33 +1,28 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../utils/database');
 
-const Profilanggota = sequelize.define('Profilanggota', {
+const Landingpageimage = sequelize.define('Landingpageimage', {
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
   },
-  nama: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  photo: {
+  photohero: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  jabatan: {
+  photocta: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  deskripsi: {
+  phototiket: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
-  isCoach: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-    defaultValue: false,
+  key: {
+    type: DataTypes.STRING,
+    allowNull: true,
   },
 });
 
-module.exports = Profilanggota;
+module.exports = Landingpageimage;
