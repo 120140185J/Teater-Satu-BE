@@ -15,9 +15,11 @@ const Program = sequelize.define(
     },
     description: {
       type: DataTypes.TEXT,
+      allowNull: false,
     },
     summary: {
       type: DataTypes.TEXT,
+      allowNull: false,
     },
     photo_url: {
       type: DataTypes.STRING,

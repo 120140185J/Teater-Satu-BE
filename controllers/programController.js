@@ -29,6 +29,10 @@ exports.createProgram = catchAsync(async (req, res, next) => {
 
   let url = '';
 
+  if (!title || !description || !summary) {
+    return next(new AppError('All fields are required', 400));
+  }
+
   if (file) {
     const uploadedFile = await fileHelper.upload(file.buffer);
     if (!uploadedFile) {
