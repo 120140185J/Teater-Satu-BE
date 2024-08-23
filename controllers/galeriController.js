@@ -16,10 +16,11 @@ exports.getAllGaleri = catchAsync(async (req, res, next) => {
 });
 
 exports.createGaleri = catchAsync(async (req, res, next) => {
-  const { nama, deskripsi, gambarGaleri } = req.body;
+  const { judul, karya, gambarGaleri, deskripsi } = req.body;
 
   const galeri = await Galeri.create({
-    nama,
+    judul,
+    karya,
     gambarGaleri,
     deskripsi,
   });
@@ -33,7 +34,7 @@ exports.createGaleri = catchAsync(async (req, res, next) => {
 });
 
 exports.updateGaleri = catchAsync(async (req, res, next) => {
-  const { nama, tanggal, deskripsi, gambarGaleri } = req.body;
+  const { judul, karya, gambarGaleri, deskripsi } = req.body;
 
   // Find the berita record by ID
   const galeri = await Galeri.findByPk(req.params.id);
@@ -43,10 +44,10 @@ exports.updateGaleri = catchAsync(async (req, res, next) => {
   }
 
   // Update the berita record with the new data
-  if (nama) galeri.nama = nama;
-  if (tanggal) galeri.tanggal = tanggal;
-  if (deskripsi) galeri.deskripsi = deskripsi;
+  if (judul) galeri.judul = judul;
+  if (karya) galeri.karya = karya;
   if (gambarGaleri) galeri.gambarGaleri = gambarGaleri;
+  if (deskripsi) galeri.deskripsi = deskripsi;
 
   await galeri.save();
 

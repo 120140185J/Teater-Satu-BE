@@ -23,7 +23,7 @@ const Profilanggota = sequelize.define('Profilanggota', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  isCoach: {
+  coach: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: false,

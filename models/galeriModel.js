@@ -9,7 +9,11 @@ const Galeri = sequelize.define(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    nama: {
+    judul: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    karya: {
       type: DataTypes.STRING,
       allowNull: false,
     },
