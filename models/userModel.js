@@ -39,6 +39,12 @@ const User = sequelize.define(
       allowNull: true,
       defaultValue: false,
     },
+    // waktu tenggat subscription dibuat 3 opsi 1 bulan 3 bulan dan infinity
+    // subscription_time: {
+    //   type: DataTypes.STRING,
+    //   allowNull: true,
+    //   defaultValue: 'infinity',
+    // },
   },
   { timestamps: false }
 );
