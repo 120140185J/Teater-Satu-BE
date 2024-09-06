@@ -7,15 +7,15 @@ const Landingpageimage = sequelize.define('Landingpageimage', {
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
   },
-  photohero: {
+  photocaroselsatu: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  photocta: {
+  photocaroseldua: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  phototiket: {
+  photocaroseltiga: {
     type: DataTypes.STRING,
     allowNull: true,
   },

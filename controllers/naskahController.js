@@ -68,13 +68,9 @@ exports.updateNaskah = catchAsync(async (req, res, next) => {
   if (namaNaskah) naskah.namaNaskah = namaNaskah;
   if (pengarang) naskah.pengarang = pengarang;
   if (isiNaskah) naskah.isiNaskah = isiNaskah;
-  
 
   if (file) {
-    const uploadedFile = await fileHelper.upload(
-      file.buffer,
-      naskah.photo_url
-    );
+    const uploadedFile = await fileHelper.upload(file.buffer, naskah.photo_url);
     if (!uploadedFile) {
       return next(new AppError('Error uploading file', 400));
     }
