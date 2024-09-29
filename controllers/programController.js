@@ -11,7 +11,10 @@ const upload = multer({
   storage: multer.memoryStorage(),
 });
 
+// photo_thumbnail_url
+
 exports.uploadProgramPhoto = upload.single('photo_url');
+exports.uploadProgramPhoto = upload.single('photo_thumbnail_url');
 
 exports.getAllProgram = catchAsync(async (req, res, next) => {
   const program = await Program.findAll();
@@ -46,6 +49,7 @@ exports.createProgram = catchAsync(async (req, res, next) => {
     title,
     description,
     summary,
+    photo_thumbnail_url: url,
     photo_url: url,
   });
 
@@ -76,13 +80,15 @@ exports.updateProgram = catchAsync(async (req, res, next) => {
   if (file) {
     const uploadedFile = await fileHelper.upload(
       file.buffer,
-      program.photo_url
+      program.photo_url,
+      program.photo_thumbnail_url,
     );
     if (!uploadedFile) {
       return next(new AppError('Error uploading file', 400));
     }
 
     program.photo_url = uploadedFile.secure_url;
+    program.photo_thumbnail_url = uploadedFile.secure_url;
   }
 
   await program.save();

@@ -21,6 +21,10 @@ const Program = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: false,
     },
+    photo_thumbnail_url: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     photo_url: {
       type: DataTypes.STRING,
       allowNull: false,

@@ -29,8 +29,8 @@ const Product = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    kategori: {
-      type: DataTypes.STRING,
+    status: {
+      type: DataTypes.BOOLEAN,
       allowNull: false,
     },
     gambar_product: {
