@@ -17,6 +17,10 @@ const Galeri = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    gambarthumbnail: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     gambarGaleri: {
       type: DataTypes.STRING,
       allowNull: false,
