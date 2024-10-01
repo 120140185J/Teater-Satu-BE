@@ -24,7 +24,7 @@ exports.getAllProduct = catchAsync(async (req, res, next) => {
 });
 
 exports.createProduct = catchAsync(async (req, res, next) => {
-  const { nama, tersedia, harga, quantity, deskripsi, status } = req.body;
+  const { nama, tersedia, harga, quantity, deskripsi, kategori } = req.body;
   const { file } = req;
 
   let url = '';
@@ -44,7 +44,7 @@ exports.createProduct = catchAsync(async (req, res, next) => {
     harga,
     quantity,
     deskripsi,
-    status,
+    kategori,
     gambar_product: url,
   });
 
@@ -57,7 +57,7 @@ exports.createProduct = catchAsync(async (req, res, next) => {
 });
 
 exports.updateProduct = catchAsync(async (req, res, next) => {
-  const { nama, tersedia, harga, quantity, deskripsi, status } = req.body;
+  const { nama, tersedia, harga, quantity, deskripsi, kategori } = req.body;
   const { file } = req;
 
   // Find the berita record by ID
@@ -73,7 +73,7 @@ exports.updateProduct = catchAsync(async (req, res, next) => {
   if (harga) product.harga = harga;
   if (quantity) product.quantity = quantity;
   if (deskripsi) product.deskripsi = deskripsi;
-  if (status) product.status = status;
+  if (kategori) product.kategori = kategori;
 
   if (file) {
     const uploadedFile = await fileHelper.upload(

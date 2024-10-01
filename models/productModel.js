@@ -29,7 +29,7 @@ const Product = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    status: {
+    kategori: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
     },
