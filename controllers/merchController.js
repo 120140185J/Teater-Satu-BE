@@ -24,7 +24,7 @@ exports.getAllMerch = catchAsync(async (req, res, next) => {
 });
 
 exports.createMerch = catchAsync(async (req, res, next) => {
-  const { nama, harga, kategori } = req.body;
+  const { nama, harga, kategori, deskripsi } = req.body;
   const { file } = req;
 
   let url = '';
@@ -42,6 +42,7 @@ exports.createMerch = catchAsync(async (req, res, next) => {
     nama,
     harga,
     kategori,
+    deskripsi,
     gambar_merch: url,
   });
 
@@ -54,7 +55,7 @@ exports.createMerch = catchAsync(async (req, res, next) => {
 });
 
 exports.updateMerch = catchAsync(async (req, res, next) => {
-  const { nama, harga, kategori } = req.body;
+  const { nama, harga, kategori, deskripsi } = req.body;
   const { file } = req;
 
   // Find the berita record by ID
@@ -68,12 +69,10 @@ exports.updateMerch = catchAsync(async (req, res, next) => {
   if (nama) merch.nama = nama;
   if (harga) merch.harga = harga;
   if (kategori) merch.kategori = kategori;
+  if (deskripsi) merch.deskripsi = deskripsi;
 
   if (file) {
-    const uploadedFile = await fileHelper.upload(
-      file.buffer,
-      merch.photo_url
-    );
+    const uploadedFile = await fileHelper.upload(file.buffer, merch.photo_url);
     if (!uploadedFile) {
       return next(new AppError('Error uploading file', 400));
     }

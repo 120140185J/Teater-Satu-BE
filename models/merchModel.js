@@ -25,6 +25,10 @@ const Merch = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    deskripsi: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
   },
   { timestamps: false }
 );
