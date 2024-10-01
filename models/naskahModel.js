@@ -25,6 +25,10 @@ const Naskah = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: false,
     },
+    linknaskah: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     
     
   },

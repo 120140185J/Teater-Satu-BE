@@ -24,7 +24,7 @@ exports.getAllNaskah = catchAsync(async (req, res, next) => {
 });
 
 exports.createNaskah = catchAsync(async (req, res, next) => {
-  const { namaNaskah, pengarang, isiNaskah } = req.body;
+  const { namaNaskah, pengarang, isiNaskah, linknaskah } = req.body;
   const { file } = req;
 
   let url = '';
@@ -43,6 +43,7 @@ exports.createNaskah = catchAsync(async (req, res, next) => {
     fotoThumbnail: url,
     pengarang,
     isiNaskah,
+    linknaskah,
   });
 
   res.status(201).json({
@@ -54,7 +55,7 @@ exports.createNaskah = catchAsync(async (req, res, next) => {
 });
 
 exports.updateNaskah = catchAsync(async (req, res, next) => {
-  const { namaNaskah, pengarang, isiNaskah } = req.body;
+  const { namaNaskah, pengarang, isiNaskah, linknaskah } = req.body;
   const { file } = req;
 
   // Find the berita record by ID
@@ -68,6 +69,7 @@ exports.updateNaskah = catchAsync(async (req, res, next) => {
   if (namaNaskah) naskah.namaNaskah = namaNaskah;
   if (pengarang) naskah.pengarang = pengarang;
   if (isiNaskah) naskah.isiNaskah = isiNaskah;
+  if (linknaskah) naskah.linknaskah = linknaskah;
 
   if (file) {
     const uploadedFile = await fileHelper.upload(file.buffer, naskah.photo_url);
