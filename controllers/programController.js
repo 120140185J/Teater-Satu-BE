@@ -1,20 +1,9 @@
-const multer = require('multer');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
-const fileHelper = require('../utils/fileHelper');
 
 const Program = require('../models/programModel');
 const handlerFactory = require('./handlerFactory');
 require('dotenv').config();
-
-const upload = multer({
-  storage: multer.memoryStorage(),
-});
-
-// photo_thumbnail_url
-
-exports.uploadProgramPhoto = upload.single('photo_url');
-exports.uploadProgramPhoto = upload.single('photo_thumbnail_url');
 
 exports.getAllProgram = catchAsync(async (req, res, next) => {
   const program = await Program.findAll();
@@ -27,30 +16,15 @@ exports.getAllProgram = catchAsync(async (req, res, next) => {
 });
 
 exports.createProgram = catchAsync(async (req, res, next) => {
-  const { title, description, summary } = req.body;
-  const { file } = req;
-
-  let url = '';
-
-  if (!title || !description || !summary) {
-    return next(new AppError('All fields are required', 400));
-  }
-
-  if (file) {
-    const uploadedFile = await fileHelper.upload(file.buffer);
-    if (!uploadedFile) {
-      return next(new AppError('Error uploading file', 400));
-    }
-
-    url = uploadedFile.secure_url;
-  }
+  const { title, description, summary, photo_thumbnail_url, photo_url } =
+    req.body;
 
   const program = await Program.create({
     title,
     description,
     summary,
-    photo_thumbnail_url: url,
-    photo_url: url,
+    photo_thumbnail_url,
+    photo_url,
   });
 
   res.status(201).json({
@@ -62,8 +36,8 @@ exports.createProgram = catchAsync(async (req, res, next) => {
 });
 
 exports.updateProgram = catchAsync(async (req, res, next) => {
-  const { title, description, summary } = req.body;
-  const { file } = req;
+  const { title, description, summary, photo_thumbnail_url, photo_url } =
+    req.body;
 
   // Find the berita record by ID
   const program = await Program.findByPk(req.params.id);
@@ -72,24 +46,11 @@ exports.updateProgram = catchAsync(async (req, res, next) => {
     return next(new AppError('No document found with that ID', 404));
   }
 
-  // Update the berita record with the new data
   if (title) program.title = title;
   if (description) program.description = description;
   if (summary) program.summary = summary;
-
-  if (file) {
-    const uploadedFile = await fileHelper.upload(
-      file.buffer,
-      program.photo_url,
-      program.photo_thumbnail_url,
-    );
-    if (!uploadedFile) {
-      return next(new AppError('Error uploading file', 400));
-    }
-
-    program.photo_url = uploadedFile.secure_url;
-    program.photo_thumbnail_url = uploadedFile.secure_url;
-  }
+  if (photo_thumbnail_url) program.photo_thumbnail_url = photo_thumbnail_url;
+  if (photo_url) program.photo_url = photo_url;
 
   await program.save();
 

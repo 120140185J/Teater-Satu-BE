@@ -6,12 +6,12 @@ const router = express.Router();
 router
   .route('/')
   .get(programController.getAllProgram)
-  .post(programController.uploadProgramPhoto, programController.createProgram);
+  .post(programController.createProgram);
 
 router
   .route('/:id')
   .get(programController.getProgram)
-  .patch(programController.uploadProgramPhoto, programController.updateProgram)
+  .patch(programController.updateProgram)
   .delete(programController.deleteProgram);
 
 module.exports = router;
