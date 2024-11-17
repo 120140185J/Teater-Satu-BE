@@ -1,35 +1,35 @@
-// const multer = require('multer');
+const multer = require('multer');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const fileHelper = require('../utils/fileHelper');
 
-const Subsvideo = require('../models/subsvideoModel');
 const handlerFactory = require('./handlerFactory');
+const Subsvideo = require('../models/subsvideoModel');
 require('dotenv').config();
 
-// const upload = multer({
-//   storage: multer.memoryStorage(),
-// });
+const upload = multer({
+  storage: multer.memoryStorage(),
+});
 
-// exports.uploadSubsvideoPhoto = upload.single('photo_url');
+exports.uploadSubsvideoPhoto = upload.single('photo_url');
 
-// exports.getAllSubsvideo = catchAsync(async (req, res, next) => {
-//   const Subsvideo = await Subsvideo.findAll();
+exports.getAllSubsvideo = catchAsync(async (req, res, next) => {
+  const subsvideo = await Subsvideo.findAll();
 
-//   res.status(200).json({
-//     status: 'success',
-//     results: subsvideo.length,
-//     data: subsvideo,
-//   });
-// });
+  res.status(200).json({
+    status: 'success',
+    results: subsvideo.length,
+    data: subsvideo,
+  });
+});
 
 exports.createSubsvideo = catchAsync(async (req, res, next) => {
-  const { title, description, summary } = req.body;
+  const { title, description, summary, sutradara, video } = req.body;
   const { file } = req;
 
   let url = '';
 
-  if (!title || !description || !summary) {
+  if (!title || !description || !summary || !sutradara || !video) {
     return next(new AppError('All fields are required', 400));
   }
 
@@ -43,22 +43,22 @@ exports.createSubsvideo = catchAsync(async (req, res, next) => {
   }
 
   const subsvideo = await Subsvideo.create({
-    title,
-    description,
-    summary,
+    judulpertunjukan: title,
+    sutradara: sutradara,
+    deskripsi: description,
+    summary: summary,
     photo_url: url,
+    video: video
   });
 
   res.status(201).json({
     status: 'success',
-    data: {
-        subsvideo,
-    },
+    data: subsvideo,
   });
 });
 
 exports.updateSubsvideo = catchAsync(async (req, res, next) => {
-  const { title, description, summary } = req.body;
+  const { title, description, summary, sutradara, video } = req.body;
   const { file } = req;
 
   // Find the berita record by ID
@@ -69,9 +69,11 @@ exports.updateSubsvideo = catchAsync(async (req, res, next) => {
   }
 
   // Update the berita record with the new data
-  if (title) subsvideo.title = title;
-  if (description) subsvideo.description = description;
+  if (title) subsvideo.judulpertunjukan = title;
+  if (description) subsvideo.deskripsi = description;
   if (summary) subsvideo.summary = summary;
+  if (sutradara) subsvideo.sutradara = sutradara;
+  if (video) subsvideo.video = video;
 
   if (file) {
     const uploadedFile = await fileHelper.upload(

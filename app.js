@@ -3,7 +3,7 @@ const morgan = require('morgan');
 const cors = require('cors');
 
 const userRouter = require('./routes/userRoutes');
-// const subsvideoRouter = require('./routes/subsvideoRoutes');
+const subsvideoRouter = require('./routes/subsvideoRoutes');
 const beritaRouter = require('./routes/beritaRoutes');
 const beritaKolaborasiRouter = require('./routes/beritakolaborasiRoutes');
 const beritaPartnerRouter = require('./routes/beritapatnerRoutes');
@@ -43,7 +43,7 @@ app.get('/', (req, res) => {
 });
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/beritas', beritaRouter);
-// app.use('/api/v1/subsvideos', subsvideoRouter);
+app.use('/api/v1/subsvideos', subsvideoRouter);
 app.use('/api/v1/beritakolaborasis', beritaKolaborasiRouter);
 app.use('/api/v1/beritapartners', beritaPartnerRouter);
 // app.use('/api/v1/kategoris', kategoriRouter);
