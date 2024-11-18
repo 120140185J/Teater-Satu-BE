@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
@@ -154,20 +155,35 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
-  // get user from collection
-  const user = await User.findById(req.user.id).select('+password');
+  // Pastikan password lama, id, dan password baru ada di request body
+  const { id, password_current, password } = req.body;
 
-  // check if posted current password is correct
-  if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
-    return next(new AppError('Your current password is wrong', 401));
+  if (!id || !password_current || !password) {
+    return next(new AppError('Please provide all required fields.', 400));
   }
 
-  // if so, update password
-  user.password = req.body.password;
-  user.passwordConfirm = req.body.passwordConfirm;
+  // Cari user berdasarkan ID dan masukkan kolom password
+  const user = await User.findByPk(id, {
+    attributes: ['id', 'password'], // Pastikan kolom password diambil secara eksplisit
+  });
 
+  // Validasi apakah user ditemukan
+  if (!user) {
+    return next(new AppError('User not found.', 404));
+  }
+
+  // Periksa apakah password lama cocok
+  const isPasswordCorrect = await user.matchPassword(password_current, user.password);
+  if (!isPasswordCorrect) {
+    return next(new AppError('Your current password is wrong.', 401));
+  }
+
+  // Perbarui password
+  user.password = password;
+
+  // Simpan user
   await user.save();
 
-  // log user in, send JWT
+  // Kirim token JWT ke user
   createSendToken(user, 200, res);
 });
