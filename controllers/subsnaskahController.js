@@ -101,7 +101,7 @@ exports.updateSubsnaskah = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getSubsaskah = catchAsync(async (req, res, next) => {
+exports.getSubsnaskah = catchAsync(async (req, res, next) => {
   const subsnaskah = await Subsnaskah.findByPk(req.params.id);
 
   if (!subsnaskah) {

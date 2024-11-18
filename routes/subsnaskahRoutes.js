@@ -9,7 +9,7 @@ router
 
 router
   .route('/:id')
-  .get(subsnaskah.getAllSubsnaskah)
+  .get(subsnaskah.getSubsnaskah)
   .patch(subsnaskah.uploadSubsnaskahPhoto, subsnaskah.updateSubsnaskah)
   .delete(subsnaskah.deleteSubsnaskah);
 
