@@ -2,7 +2,6 @@ const express = require('express');
 const subsnaskah = require('../controllers/subsnaskahController');
 
 const router = express.Router();
-
 router
   .route('/')
   .get(subsnaskah.getAllSubsnaskah)
@@ -10,7 +9,7 @@ router
 
 router
   .route('/:id')
-  .get(subsnaskah.getSubsnaskah)
+  .get(subsnaskah.getAllSubsnaskah)
   .patch(subsnaskah.uploadSubsnaskahPhoto, subsnaskah.updateSubsnaskah)
   .delete(subsnaskah.deleteSubsnaskah);
 

@@ -14,7 +14,9 @@ const upload = multer({
 exports.uploadSubsnaskahPhoto = upload.single('gambar_subsnaskah');
 
 exports.getAllSubsnaskah = catchAsync(async (req, res, next) => {
-  const subsnaskah = await Subsnaskah.findAll();
+  const subsnaskah = await Subsnaskah.findAll({
+    order: [['createdAt', 'DESC']],
+  });
 
   res.status(200).json({
     status: 'success',
@@ -23,9 +25,17 @@ exports.getAllSubsnaskah = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.createSubsaskah = catchAsync(async (req, res, next) => {
-  const { namaSubsnaskah, pengarang, isiSubsnaskah } = req.body;
+exports.createSubsnaskah = catchAsync(async (req, res, next) => {
+  const { naskah, pengarang, kategori, summary, isi } = req.body;
   const { file } = req;
+
+  if(!naskah) {
+    return next(new AppError('Naskah is required', 400));
+  }
+
+  if(!pengarang) {
+    return next(new AppError('Pengarang is required', 400));
+  }
 
   let url = '';
 
@@ -39,22 +49,22 @@ exports.createSubsaskah = catchAsync(async (req, res, next) => {
   }
 
   const subsnaskah = await Subsnaskah.create({
-    namaSubsnaskah,
-    fotoThumbnail: url,
+    nama_naskah: naskah,
+    file_naskah: url,
     pengarang,
-    isiSubsnaskah,
+    kategori_naskah: kategori,
+    summary,
+    isi_naskah: isi,
   });
 
   res.status(201).json({
     status: 'success',
-    data: {
-      subsnaskah,
-    },
+    data: subsnaskah
   });
 });
 
 exports.updateSubsnaskah = catchAsync(async (req, res, next) => {
-  const { namaSubsnaskah, pengarang, isiSubsnaskah } = req.body;
+  const { naskah, pengarang, kategori, summary, isi } = req.body;
   const { file } = req;
 
   // Find the berita record by ID
@@ -65,21 +75,22 @@ exports.updateSubsnaskah = catchAsync(async (req, res, next) => {
   }
 
   // Update the berita record with the new data
-  if (namaSubsnaskah) subsnaskah.namaSubsnaskah = namaSubsnaskah;
+  if (naskah) subsnaskah.nama_naskah = naskah;
   if (pengarang) subsnaskah.pengarang = pengarang;
-  if (isiSubsnaskah) subsnaskah.isiSubsnaskah = isiSubsnaskah;
-  
+  if (isi) subsnaskah.isi_naskah = isi;
+  if (summary) subsnaskah.summary = summary;
+  if (kategori) subsnaskah.kategori_naskah = kategori;
 
   if (file) {
     const uploadedFile = await fileHelper.upload(
       file.buffer,
-      subsnaskah.photo_url
+      subsnaskah.file_naskah
     );
     if (!uploadedFile) {
       return next(new AppError('Error uploading file', 400));
     }
 
-    subsnaskah.foto = uploadedFile.secure_url;
+    subsnaskah.file_naskah = uploadedFile.secure_url;
   }
 
   await subsnaskah.save();
@@ -103,4 +114,4 @@ exports.getSubsaskah = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.deleteSubsaskah = handlerFactory.deleteOne(Subsnaskah);
+exports.deleteSubsnaskah = handlerFactory.deleteOne(Subsnaskah);

@@ -2,18 +2,18 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../utils/database');
 
 const Subsnaskah = sequelize.define(
-  'Subsnaskah',
+  'subs_naskah',
   {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    namaNaskah: {
+    nama_naskah: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    fotoThumbnail: {
+    file_naskah: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -21,14 +21,19 @@ const Subsnaskah = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    isiNaskah: {
-      type: DataTypes.TEXT,
-      allowNull: false,
+    kategori_naskah: {
+      type: DataTypes.ENUM(['naskah', 'buku'])
     },
-    
-    
+    summary: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    isi_naskah: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
   },
-  { timestamps: false }
+  { timestamps: true }
 );
 
 module.exports = Subsnaskah;
