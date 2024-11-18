@@ -14,7 +14,9 @@ const upload = multer({
 exports.uploadSubsvideoPhoto = upload.single('photo_url');
 
 exports.getAllSubsvideo = catchAsync(async (req, res, next) => {
-  const subsvideo = await Subsvideo.findAll();
+  const subsvideo = await Subsvideo.findAll({
+    order: [['createdAt', 'DESC']],
+  });
 
   res.status(200).json({
     status: 'success',
@@ -27,11 +29,11 @@ exports.createSubsvideo = catchAsync(async (req, res, next) => {
   const { title, description, summary, sutradara, video } = req.body;
   const { file } = req;
 
-  let url = '';
-
-  if (!title || !description || !summary || !sutradara || !video) {
-    return next(new AppError('All fields are required', 400));
+  if(!title) {
+    return next(new AppError('Title is required', 400));
   }
+
+  let url = '';
 
   if (file) {
     const uploadedFile = await fileHelper.upload(file.buffer);
@@ -43,12 +45,12 @@ exports.createSubsvideo = catchAsync(async (req, res, next) => {
   }
 
   const subsvideo = await Subsvideo.create({
-    judulpertunjukan: title,
-    sutradara: sutradara,
-    deskripsi: description,
-    summary: summary,
+    title,
+    sutradara,
+    description,
+    summary,
     photo_url: url,
-    video: video
+    video_url: video
   });
 
   res.status(201).json({
@@ -69,11 +71,11 @@ exports.updateSubsvideo = catchAsync(async (req, res, next) => {
   }
 
   // Update the berita record with the new data
-  if (title) subsvideo.judulpertunjukan = title;
-  if (description) subsvideo.deskripsi = description;
+  if (title) subsvideo.title = title;
+  if (description) subsvideo.description = description;
   if (summary) subsvideo.summary = summary;
   if (sutradara) subsvideo.sutradara = sutradara;
-  if (video) subsvideo.video = video;
+  if (video) subsvideo.video_url = video;
 
   if (file) {
     const uploadedFile = await fileHelper.upload(

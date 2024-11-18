@@ -2,36 +2,36 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../utils/database');
 
 const Subsvideo = sequelize.define(
-  'Subsvideo',
+  'subs_video',
   {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    judulpertunjukan: {
+    title: {
       type: DataTypes.STRING,
       allowNull: false,
     },
     sutradara: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: true,
     },
     summary: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: true,
     },
-    deskripsi: {
+    description: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: true,
     },
     photo_url: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
-    video: {
+    video_url: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
   },
 //   {
