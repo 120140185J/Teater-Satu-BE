@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
@@ -178,8 +179,13 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
     return next(new AppError('Your current password is wrong.', 401));
   }
 
-  // Perbarui password
-  user.password = password;
+  // Perbarui password bcrypt
+  const DEFAULT_SALT_ROUNDS = 10;
+  const encryptedPassword = await bcrypt.hash(
+    user.password,
+    DEFAULT_SALT_ROUNDS
+  );
+  user.password = encryptedPassword;
 
   // Simpan user
   await user.save();

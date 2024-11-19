@@ -34,17 +34,12 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
-    subscription: {
-      type: DataTypes.BOOLEAN,
-      allowNull: true,
-      defaultValue: false,
-    },
     // waktu tenggat subscription dibuat 3 opsi 1 bulan 3 bulan dan infinity
-    // subscription_time: {
-    //   type: DataTypes.STRING,
-    //   allowNull: true,
-    //   defaultValue: 'infinity',
-    // },
+    subscription_time: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: 'infinity',
+    },
   },
   { timestamps: false }
 );
