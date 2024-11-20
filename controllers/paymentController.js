@@ -4,21 +4,42 @@ const catchAsync = require('../utils/catchAsync');
 const Paymenthistory = require('../models/paymenthistoryModel');
 
 exports.getAllHistoryPayment = catchAsync(async (req, res, next) => {
-    const paymentHistory = await Paymenthistory.findAll({
-        include: [
-        {
-            model: User,
-            as: 'user',
-            attributes: ['name', 'email', 'subscription_time'],
-        },
-        ],
-    });
-    
-    res.status(200).json({
-        status: 'success',
-        data: paymentHistory,
-    });
-})
+  const paymentHistory = await Paymenthistory.findAll({
+    include: [
+      {
+        model: User,
+        as: 'user',
+        attributes: ['name', 'email', 'subscription_time'],
+      },
+    ],
+  });
+
+  res.status(200).json({
+    status: 'success',
+    data: paymentHistory,
+  });
+});
+
+exports.getHistoryPaymentByIdUser = catchAsync(async (req, res, next) => {
+  const idUser = req.query.id
+  const paymentHistory = await Paymenthistory.findAll({
+    include: [
+      {
+        model: User,
+        as: 'user',
+        attributes: ['name', 'email', 'subscription_time'],
+      },
+    ],
+    where: {
+      id_user: idUser
+    }
+  });
+
+  res.status(200).json({
+    status: 'success',
+    data: paymentHistory,
+  });
+});
 
 exports.createToken = catchAsync(async (req, res, next) => {
   // eslint-disable-next-line prefer-destructuring
@@ -81,9 +102,9 @@ exports.createToken = catchAsync(async (req, res, next) => {
       id_user: body.id_user,
       order_id: orderId,
     },
-  })
+  });
 
-  if(cekOrderUserId) {
+  if (cekOrderUserId) {
     // Update Payment History
     cekOrderUserId.update({
       gross_amount: grossAmount,
@@ -130,7 +151,7 @@ exports.webhook = catchAsync(async (req, res, next) => {
       },
     });
 
-    if(paymentHistory) {
+    if (paymentHistory) {
       paymentHistory.update({
         transaction_status: notification.transaction_status,
         fraud_status: notification.fraud_status,
@@ -140,12 +161,12 @@ exports.webhook = catchAsync(async (req, res, next) => {
 
     // Update User Status
     const user = await User.findByPk(paymentHistory.id_user);
-    
+
     // Generate bulan depan
     const date = new Date();
     date.setMonth(date.getMonth() + 1);
 
-    if(user) {
+    if (user) {
       user.update({
         subscription_time: date,
       });
