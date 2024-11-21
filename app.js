@@ -29,6 +29,7 @@ const programRouter = require('./routes/programRoutes');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errController');
 const paymentRouter = require('./routes/paymentRoutes');
+const tiketRouter = require('./routes/tiketRoutes');
 
 const app = express();
 
@@ -68,6 +69,7 @@ app.use('/api/v1/naskahs', naskahRouter);
 app.use('/api/v1/image', imageRouter);
 app.use('/api/v1/landingpageimages', landingpageimageRouter);
 app.use('/api/v1/payment', paymentRouter);
+app.use('/api/v1/tiket', tiketRouter);
 
 app.use('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
