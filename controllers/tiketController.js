@@ -4,6 +4,7 @@ const AppError = require('../utils/appError');
 
 const handlerFactory = require('./handlerFactory');
 const Tiket = require('../models/tiketModel');
+const HistoryBuyTiket = require('../models/historyBuyTiketModel');
 require('dotenv').config();
 
 exports.getAllTiket = catchAsync(async (req, res, next) => {
@@ -106,3 +107,41 @@ exports.getTiket = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteTiket = handlerFactory.deleteOne(Tiket);
+
+exports.buyTiketUser = catchAsync(async (req, res, next) => {
+  const {
+    nama_user,
+    no_telp,
+    id_tiket,
+    jumlah_tiket,
+  } = req.body;
+
+  if (!nama_user || !no_telp || !id_tiket || !jumlah_tiket) {
+    return next(new AppError('Please provide all required fields', 400));
+  }
+
+  const tiket = await Tiket.findByPk(id_tiket);
+
+  if (!tiket) {
+    return next(new AppError('No document found with that ID', 404));
+  }
+
+  if (tiket.jumlah_stok_tiket < jumlah_tiket) {
+    return next(new AppError('Not enough stock', 400));
+  }
+
+  tiket.jumlah_stok_tiket -= jumlah_tiket;
+  await tiket.save();
+
+  await HistoryBuyTiket.create({
+    nama_user,
+    no_telp,
+    id_tiket,
+    jumlah_tiket,
+  });
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Tiket berhasil dibeli',
+  });
+});

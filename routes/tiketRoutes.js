@@ -4,6 +4,10 @@ const tiketController = require('../controllers/tiketController');
 const router = express.Router();
 
 router
+  .route('/user/pesan')
+  .post(tiketController.buyTiketUser);
+
+router
   .route('/')
   .get(tiketController.getAllTiket)
   .post(tiketController.createTiket);
