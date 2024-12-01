@@ -9,7 +9,7 @@ router
 
 router
   .route('/:id')
-  .get(subsgaleri.getAllSubsgaleri)
+  .get(subsgaleri.getSubGaleri)
   .patch(subsgaleri.uploadSubsgaleriPhoto, subsgaleri.updateSubsgaleri)
   .delete(subsgaleri.deleteSubsgaleri);
 
