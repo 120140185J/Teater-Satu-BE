@@ -8,6 +8,10 @@ router
   .post(tiketController.buyTiketUser);
 
 router
+  .route('/user/history')
+  .get(tiketController.getHistoryTiketUser);
+
+router
   .route('/')
   .get(tiketController.getAllTiket)
   .post(tiketController.createTiket);

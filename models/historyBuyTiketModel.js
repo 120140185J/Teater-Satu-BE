@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../utils/database');
+const User = require('./userModel');
+const Tiket = require('./tiketModel');
 
 const HistoryBuyTiket = sequelize.define(
   'history_buy_tikets',
@@ -21,6 +23,10 @@ const HistoryBuyTiket = sequelize.define(
       type: DataTypes.UUID,
       allowNull: false,
     },
+    id_user: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
     jumlah_tiket: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -28,5 +34,15 @@ const HistoryBuyTiket = sequelize.define(
   },
   { timestamps: true }
 );
+
+HistoryBuyTiket.belongsTo(User, {
+  foreignKey: 'id_user',
+  as: 'user',
+});
+
+HistoryBuyTiket.belongsTo(Tiket, {
+  foreignKey: 'id_tiket',
+  as: 'tiket',
+});
 
 module.exports = HistoryBuyTiket;
