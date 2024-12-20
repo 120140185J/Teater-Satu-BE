@@ -22,7 +22,7 @@ const Subsnaskah = sequelize.define(
       allowNull: false,
     },
     kategori_naskah: {
-      type: DataTypes.ENUM(['naskah', 'buku'])
+      type: DataTypes.ENUM(['naskah', 'buku']),
     },
     summary: {
       type: DataTypes.TEXT,
