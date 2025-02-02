@@ -44,7 +44,8 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 
   const user = await User.findOne({ where: { email: email } });
-
+  console.log(user.password);
+  console.log(password);
   if (!user || !(await user.matchPassword(password))) {
     return next(new AppError('Password atau email anda salah', 401));
   }

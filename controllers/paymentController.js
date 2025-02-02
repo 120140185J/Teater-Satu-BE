@@ -21,7 +21,7 @@ exports.getAllHistoryPayment = catchAsync(async (req, res, next) => {
 });
 
 exports.getHistoryPaymentByIdUser = catchAsync(async (req, res, next) => {
-  const idUser = req.query.id
+  const idUser = req.query.id;
   const paymentHistory = await Paymenthistory.findAll({
     include: [
       {
@@ -31,8 +31,8 @@ exports.getHistoryPaymentByIdUser = catchAsync(async (req, res, next) => {
       },
     ],
     where: {
-      id_user: idUser
-    }
+      id_user: idUser,
+    },
   });
 
   res.status(200).json({
@@ -57,7 +57,7 @@ exports.createToken = catchAsync(async (req, res, next) => {
     email: user.email,
   };
 
-  const grossAmount = 5000; // Total Harga saya set HardCode 5000
+  const grossAmount = body.amount;
 
   const parameter = {
     transaction_details: {
