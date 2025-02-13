@@ -7,7 +7,7 @@ router
   .route('/')
   .get(beritakolaborasiController.getAllBeritaKolaborasi)
   .post(
-    beritakolaborasiController.uploadBeritaKolaborasiPhoto,
+    beritakolaborasiController.uploadBeritaKolaborasiPhotos,
     beritakolaborasiController.createBeritaKolaborasi
   );
 
@@ -15,7 +15,7 @@ router
   .route('/:id')
   .get(beritakolaborasiController.getBeritaKolaborasi)
   .patch(
-    beritakolaborasiController.uploadBeritaKolaborasiPhoto,
+    beritakolaborasiController.uploadBeritaKolaborasiPhotos,
     beritakolaborasiController.updateBeritaKolaborasi
   )
   .delete(beritakolaborasiController.deleteBeritaKolaborasi);

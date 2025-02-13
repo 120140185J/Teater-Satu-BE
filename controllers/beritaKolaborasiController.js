@@ -11,7 +11,11 @@ const upload = multer({
   storage: multer.memoryStorage(),
 });
 
-exports.uploadBeritaKolaborasiPhoto = upload.single('photo_url');
+exports.uploadBeritaKolaborasiPhotos = upload.fields([
+  { name: 'photo_url', maxCount: 1 },
+  { name: 'gambar_1', maxCount: 1 },
+  { name: 'gambar_2', maxCount: 1 },
+]);
 
 exports.getAllBeritaKolaborasi = catchAsync(async (req, res, next) => {
   const beritakolaborasi = await BeritaKolaborasi.findAll({});
@@ -25,39 +29,60 @@ exports.getAllBeritaKolaborasi = catchAsync(async (req, res, next) => {
 
 exports.createBeritaKolaborasi = catchAsync(async (req, res, next) => {
   const { title, description, summary } = req.body;
-  const { file } = req;
+  const { files } = req;
 
-  let url = '';
+  let photoUrl = '';
+  let gambar1Url = '';
+  let gambar2Url = '';
 
-  if (file) {
-    const uploadedFile = await fileHelper.upload(file.buffer);
+  if (files.photo_url) {
+    const uploadedFile = await fileHelper.upload(files.photo_url[0].buffer);
     if (!uploadedFile) {
-      return next(new AppError('Error uploading file', 400));
+      return next(new AppError('Error uploading photo_url', 400));
     }
-
-    url = uploadedFile.secure_url;
+    photoUrl = uploadedFile.secure_url;
   }
 
-  const beritakolaborasi = await BeritaKolaborasi.create({
+  if (files.gambar_1) {
+    const uploadedFile = await fileHelper.upload(files.gambar_1[0].buffer);
+    if (!uploadedFile) {
+      return next(new AppError('Error uploading gambar_1', 400));
+    }
+    gambar1Url = uploadedFile.secure_url;
+  }
+
+  if (files.gambar_2) {
+    const uploadedFile = await fileHelper.upload(files.gambar_2[0].buffer);
+    if (!uploadedFile) {
+      return next(new AppError('Error uploading gambar_2', 400));
+    }
+    gambar2Url = uploadedFile.secure_url;
+  }
+
+  const berita = await BeritaKolaborasi.create({
     title,
     description,
     summary,
-    photo_url: url,
-    gambar1: url,
-    gambar2: url,
+    photo_url: photoUrl,
+    gambar1: gambar1Url,
+    gambar2: gambar2Url,
   });
 
   res.status(201).json({
     status: 'success',
     data: {
-      beritakolaborasi,
+      berita,
     },
   });
 });
 
 exports.updateBeritaKolaborasi = catchAsync(async (req, res, next) => {
   const { title, description, summary } = req.body;
-  const { file } = req;
+  const { files } = req;
+
+  let photoUrl = '';
+  let gambar1Url = '';
+  let gambar2Url = '';
 
   // Find the berita record by ID
   const beritakolaborasi = await BeritaKolaborasi.findByPk(req.params.id);
@@ -71,17 +96,45 @@ exports.updateBeritaKolaborasi = catchAsync(async (req, res, next) => {
   if (description) beritakolaborasi.description = description;
   if (summary) beritakolaborasi.summary = summary;
 
-  if (file) {
-    const uploadedFile = await fileHelper.upload(
-      file.buffer,
-      beritakolaborasi.photo_url
-    );
-    if (!uploadedFile) {
-      return next(new AppError('Error uploading file', 400));
-    }
+  // if (file) {
+  //   const uploadedFile = await fileHelper.upload(
+  //     file.buffer,
+  //     beritakolaborasi.photo_url
+  //   );
+  //   if (!uploadedFile) {
+  //     return next(new AppError('Error uploading file', 400));
+  //   }
 
-    beritakolaborasi.photo_url = uploadedFile.secure_url;
+  //   beritakolaborasi.photo_url = uploadedFile.secure_url;
+  // }
+
+  if (files.photo_url) {
+    const uploadedFile = await fileHelper.upload(files.photo_url[0].buffer);
+    if (!uploadedFile) {
+      return next(new AppError('Error uploading photo_url', 400));
+    }
+    photoUrl = uploadedFile.secure_url;
+    beritakolaborasi.photo_url = photoUrl;
   }
+
+  if (files.gambar_1) {
+    const uploadedFile = await fileHelper.upload(files.gambar_1[0].buffer);
+    if (!uploadedFile) {
+      return next(new AppError('Error uploading gambar_1', 400));
+    }
+    gambar1Url = uploadedFile.secure_url;
+    beritakolaborasi.gambar1 = gambar1Url;
+  }
+
+  if (files.gambar_2) {
+    const uploadedFile = await fileHelper.upload(files.gambar_2[0].buffer);
+    if (!uploadedFile) {
+      return next(new AppError('Error uploading gambar_2', 400));
+    }
+    gambar2Url = uploadedFile.secure_url;
+    beritakolaborasi.gambar2= gambar2Url
+  }
+
 
   await beritakolaborasi.save();
 
