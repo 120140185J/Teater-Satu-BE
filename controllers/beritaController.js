@@ -11,7 +11,11 @@ const upload = multer({
   storage: multer.memoryStorage(),
 });
 
-exports.uploadBeritaPhoto = upload.single('photo_url');
+exports.uploadBeritaPhotos = upload.fields([
+  { name: 'photo_url', maxCount: 1 },
+  { name: 'gambar_1', maxCount: 1 },
+  { name: 'gambar_2', maxCount: 1 },
+]);
 
 exports.getAllBerita = catchAsync(async (req, res, next) => {
   const berita = await Berita.findAll({
@@ -24,26 +28,46 @@ exports.getAllBerita = catchAsync(async (req, res, next) => {
   });
 });
 
+// filepath: /d:/kodingan yusuf/TA LULUS 2024!!!/Ta Capstone/koding/BE WEB TS/backend-teater-satu/controllers/beritaController.js
 exports.createBerita = catchAsync(async (req, res, next) => {
-  const { title, description, summary} = req.body;
-  const { file } = req;
+  const { title, description, summary } = req.body;
+  const {files} = req;
 
-  let url = '';
+  let photoUrl = '';
+  let gambar1Url = '';
+  let gambar2Url = '';
 
-  if (file) {
-    const uploadedFile = await fileHelper.upload(file.buffer);
+  if (files.photo_url) {
+    const uploadedFile = await fileHelper.upload(files.photo_url[0].buffer);
     if (!uploadedFile) {
-      return next(new AppError('Error uploading file', 400));
+      return next(new AppError('Error uploading photo_url', 400));
     }
+    photoUrl = uploadedFile.secure_url;
+  }
 
-    url = uploadedFile.secure_url;
+  if (files.gambar_1) {
+    const uploadedFile = await fileHelper.upload(files.gambar_1[0].buffer);
+    if (!uploadedFile) {
+      return next(new AppError('Error uploading gambar_1', 400));
+    }
+    gambar1Url = uploadedFile.secure_url;
+  }
+
+  if (files.gambar_2) {
+    const uploadedFile = await fileHelper.upload(files.gambar_2[0].buffer);
+    if (!uploadedFile) {
+      return next(new AppError('Error uploading gambar_2', 400));
+    }
+    gambar2Url = uploadedFile.secure_url;
   }
 
   const berita = await Berita.create({
     title,
     description,
     summary,
-    photo_url: url,
+    photo_url: photoUrl,
+    gambar_1: gambar1Url,
+    gambar_2: gambar2Url,
   });
 
   res.status(201).json({

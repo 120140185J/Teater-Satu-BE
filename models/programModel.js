@@ -29,6 +29,10 @@ const Program = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    photo_url_2: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   },
   { timestamps: true }
 );

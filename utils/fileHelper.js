@@ -27,6 +27,7 @@ const upload = async (fileBuffer, oldPublicId) => {
   });
 };
 
+
 module.exports = {
   upload,
 };

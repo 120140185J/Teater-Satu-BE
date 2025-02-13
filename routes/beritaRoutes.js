@@ -6,12 +6,12 @@ const router = express.Router();
 router
   .route('/')
   .get(beritaController.getAllBerita)
-  .post(beritaController.uploadBeritaPhoto, beritaController.createBerita);
+  .post(beritaController.uploadBeritaPhotos, beritaController.createBerita);
 
 router
   .route('/:id')
   .get(beritaController.getBerita)
-  .patch(beritaController.uploadBeritaPhoto, beritaController.updateBerita)
+  .patch(beritaController.uploadBeritaPhotos, beritaController.updateBerita)
   .delete(beritaController.deleteBerita);
 
 module.exports = router;

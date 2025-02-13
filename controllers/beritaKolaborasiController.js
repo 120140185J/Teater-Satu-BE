@@ -43,6 +43,8 @@ exports.createBeritaKolaborasi = catchAsync(async (req, res, next) => {
     description,
     summary,
     photo_url: url,
+    gambar1: url,
+    gambar2: url,
   });
 
   res.status(201).json({
