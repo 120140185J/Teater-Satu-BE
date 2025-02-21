@@ -18,8 +18,7 @@ exports.uploadBeritaPhotos = upload.fields([
 ]);
 
 exports.getAllBerita = catchAsync(async (req, res, next) => {
-  const berita = await Berita.findAll({
-  });
+  const berita = await Berita.findAll({});
 
   res.status(200).json({
     status: 'success',
@@ -30,8 +29,9 @@ exports.getAllBerita = catchAsync(async (req, res, next) => {
 
 // filepath: /d:/kodingan yusuf/TA LULUS 2024!!!/Ta Capstone/koding/BE WEB TS/backend-teater-satu/controllers/beritaController.js
 exports.createBerita = catchAsync(async (req, res, next) => {
-  const { title, description, summary } = req.body;
-  const {files} = req;
+  const { title, description, summary, description2, description3, link } =
+    req.body;
+  const { files } = req;
 
   let photoUrl = '';
   let gambar1Url = '';
@@ -68,6 +68,9 @@ exports.createBerita = catchAsync(async (req, res, next) => {
     photo_url: photoUrl,
     gambar_1: gambar1Url,
     gambar_2: gambar2Url,
+    description2,
+    description3,
+    link,
   });
 
   res.status(201).json({
@@ -79,7 +82,8 @@ exports.createBerita = catchAsync(async (req, res, next) => {
 });
 
 exports.updateBerita = catchAsync(async (req, res, next) => {
-  const { title, description, summary} = req.body;
+  const { title, description, summary, description2, description3, link } =
+    req.body;
   const { file } = req;
 
   // Find the berita record by ID
@@ -93,7 +97,10 @@ exports.updateBerita = catchAsync(async (req, res, next) => {
   if (title) berita.title = title;
   if (description) berita.description = description;
   if (summary) berita.summary = summary;
-  
+  if (description2) berita.description2 = description2;
+  if (description3) berita.description3 = description3;
+  if (link) berita.link = link;
+
   if (file) {
     const uploadedFile = await fileHelper.upload(file.buffer, berita.photo_url);
     if (!uploadedFile) {
@@ -112,8 +119,7 @@ exports.updateBerita = catchAsync(async (req, res, next) => {
 });
 
 exports.getBerita = catchAsync(async (req, res, next) => {
-  const berita = await Berita.findByPk(req.params.id, {
-  });
+  const berita = await Berita.findByPk(req.params.id, {});
 
   if (!berita) {
     return next(new AppError('No document found with that ID', 404));

@@ -24,7 +24,8 @@ exports.getAllBeritaPatner = catchAsync(async (req, res, next) => {
 });
 
 exports.createBeritaPatner = catchAsync(async (req, res, next) => {
-  const { title, description, summary } = req.body;
+  const { title, description, summary, description2, description3, link } =
+    req.body;
   const { file } = req;
 
   let url = '';
@@ -45,6 +46,9 @@ exports.createBeritaPatner = catchAsync(async (req, res, next) => {
     photo_url: url,
     gambar1: url,
     gambar2: url,
+    description2,
+    description3,
+    link,
   });
 
   res.status(201).json({
@@ -56,7 +60,8 @@ exports.createBeritaPatner = catchAsync(async (req, res, next) => {
 });
 
 exports.updateBeritaPatner = catchAsync(async (req, res, next) => {
-  const { title, description, summary } = req.body;
+  const { title, description, summary, description2, description3, link } =
+    req.body;
   const { file } = req;
 
   // Find the berita record by ID
@@ -70,6 +75,9 @@ exports.updateBeritaPatner = catchAsync(async (req, res, next) => {
   if (title) beritapatner.title = title;
   if (description) beritapatner.description = description;
   if (summary) beritapatner.summary = summary;
+  if (description2) beritapatner.description2 = description2;
+  if (description3) beritapatner.description3 = description3;
+  if (link) beritapatner.link = link;
 
   if (file) {
     const uploadedFile = await fileHelper.upload(

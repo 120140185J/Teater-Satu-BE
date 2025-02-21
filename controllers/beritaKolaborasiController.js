@@ -28,7 +28,8 @@ exports.getAllBeritaKolaborasi = catchAsync(async (req, res, next) => {
 });
 
 exports.createBeritaKolaborasi = catchAsync(async (req, res, next) => {
-  const { title, description, summary } = req.body;
+  const { title, description, summary, description2, description3, link } =
+    req.body;
   const { files } = req;
 
   let photoUrl = '';
@@ -66,6 +67,9 @@ exports.createBeritaKolaborasi = catchAsync(async (req, res, next) => {
     photo_url: photoUrl,
     gambar1: gambar1Url,
     gambar2: gambar2Url,
+    description2,
+    description3,
+    link,
   });
 
   res.status(201).json({
@@ -77,7 +81,8 @@ exports.createBeritaKolaborasi = catchAsync(async (req, res, next) => {
 });
 
 exports.updateBeritaKolaborasi = catchAsync(async (req, res, next) => {
-  const { title, description, summary } = req.body;
+  const { title, description, summary, description2, description3, link } =
+    req.body;
   const { files } = req;
 
   let photoUrl = '';
@@ -95,6 +100,9 @@ exports.updateBeritaKolaborasi = catchAsync(async (req, res, next) => {
   if (title) beritakolaborasi.title = title;
   if (description) beritakolaborasi.description = description;
   if (summary) beritakolaborasi.summary = summary;
+  if (description2) beritakolaborasi.description2 = description2;
+  if (description3) beritakolaborasi.description3 = description3;
+  if (link) beritakolaborasi.link = link;
 
   // if (file) {
   //   const uploadedFile = await fileHelper.upload(
@@ -132,9 +140,8 @@ exports.updateBeritaKolaborasi = catchAsync(async (req, res, next) => {
       return next(new AppError('Error uploading gambar_2', 400));
     }
     gambar2Url = uploadedFile.secure_url;
-    beritakolaborasi.gambar2= gambar2Url
+    beritakolaborasi.gambar2 = gambar2Url;
   }
-
 
   await beritakolaborasi.save();
 

@@ -17,8 +17,17 @@ exports.getAllProgram = catchAsync(async (req, res, next) => {
 
 exports.createProgram = catchAsync(async (req, res, next) => {
   // eslint-disable-next-line camelcase
-  const { title, description, summary, photo_thumbnail_url, photo_url, photo_url_2, } =
-    req.body;
+  const {
+    title,
+    description,
+    summary,
+    photo_thumbnail_url,
+    photo_url,
+    photo_url_2,
+    description2,
+    description3,
+    link,
+  } = req.body;
 
   const program = await Program.create({
     title,
@@ -30,7 +39,10 @@ exports.createProgram = catchAsync(async (req, res, next) => {
     photo_url,
     // eslint-disable-next-line camelcase
     photo_url_2,
-  });   
+    description2,
+    description3,
+    link,
+  });
 
   res.status(201).json({
     status: 'success',
@@ -41,8 +53,17 @@ exports.createProgram = catchAsync(async (req, res, next) => {
 });
 
 exports.updateProgram = catchAsync(async (req, res, next) => {
-  const { title, description, summary, photo_thumbnail_url, photo_url, photo_url_2, } =
-    req.body;
+  const {
+    title,
+    description,
+    summary,
+    photo_thumbnail_url,
+    photo_url,
+    photo_url_2,
+    description2,
+    description3,
+    link,
+  } = req.body;
 
   // Find the berita record by ID
   const program = await Program.findByPk(req.params.id);
@@ -57,6 +78,9 @@ exports.updateProgram = catchAsync(async (req, res, next) => {
   if (photo_thumbnail_url) program.photo_thumbnail_url = photo_thumbnail_url;
   if (photo_url) program.photo_url = photo_url;
   if (photo_url_2) program.photo_url_2 = photo_url_2;
+  if (description2) program.description2 = description2;
+  if (description3) program.description3 = description3;
+  if (link) program.link = link;
 
   await program.save();
 

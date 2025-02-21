@@ -25,11 +25,23 @@ const Berita = sequelize.define(
     },
     gambar_1: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     gambar_2: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
+    },
+    description2: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    description3: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    link: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
   },
   { timestamps: true }

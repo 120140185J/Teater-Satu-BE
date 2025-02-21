@@ -21,17 +21,29 @@ const Program = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    photo_thumbnail_url: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     photo_url: {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    photo_thumbnail_url: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     photo_url_2: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
+    },
+    description2: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    description3: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    link: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
   },
   { timestamps: true }
