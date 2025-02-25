@@ -13,20 +13,29 @@ const Profilanggota = sequelize.define('Profilanggota', {
   },
   photo: {
     type: DataTypes.STRING,
-    allowNull: true,
+    allowNull: false,
   },
   jabatan: {
+    //JABATAN ITU USERNAME INSTAGRAM
     type: DataTypes.STRING,
     allowNull: true,
   },
   deskripsi: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   coach: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: false,
+  },
+  porto: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  linkig: {
+    type: DataTypes.STRING,
+    allowNull: true,
   },
 });
 

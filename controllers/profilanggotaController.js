@@ -15,7 +15,14 @@ exports.uploadProfilanggotaPhoto = upload.single('photo');
 exports.getAllProfilanggota = factory.getAll(Profileanggota);
 exports.getProfileanggota = factory.getOne(Profileanggota);
 exports.createProfilanggota = catchAsync(async (req, res, next) => {
-  const { nama, jabatan, deskripsi, coach } = req.body;
+  const {
+    nama,
+    jabatan, //JABATAN ITU USERNAME INSTAGRAM
+    deskripsi,
+    coach,
+    porto,
+    linkig,
+  } = req.body;
   const { file } = req;
 
   let url = '';
@@ -35,6 +42,8 @@ exports.createProfilanggota = catchAsync(async (req, res, next) => {
     jabatan,
     deskripsi,
     coach,
+    porto,
+    linkig,
   });
 
   res.status(201).json({
@@ -46,7 +55,7 @@ exports.createProfilanggota = catchAsync(async (req, res, next) => {
 });
 
 exports.updateProfilanggota = catchAsync(async (req, res, next) => {
-  const { nama, jabatan, deskripsi, coach } = req.body;
+  const { nama, jabatan, deskripsi, coach, porto, linkig } = req.body;
   const { file } = req;
 
   // Find the berita record by ID
@@ -61,6 +70,8 @@ exports.updateProfilanggota = catchAsync(async (req, res, next) => {
   if (jabatan) profilanggota.jabatan = jabatan;
   if (deskripsi) profilanggota.deskripsi = deskripsi;
   if (coach) profilanggota.coach = coach;
+  if (porto) profilanggota.porto = porto;
+  if (linkig) profilanggota.linkig = linkig;
 
   if (file) {
     const uploadedFile = await fileHelper.upload(

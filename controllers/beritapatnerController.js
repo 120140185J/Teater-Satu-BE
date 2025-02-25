@@ -11,7 +11,11 @@ const upload = multer({
   storage: multer.memoryStorage(),
 });
 
-exports.uploadBeritaPatnerPhoto = upload.single('photo_url');
+exports.uploadBeritaPatnerPhoto = upload.fields([
+  { name: 'photo_url', maxCount: 1 },
+  { name: 'gambar1', maxCount: 1 },
+  { name: 'gambar2', maxCount: 1 },
+]);
 
 exports.getAllBeritaPatner = catchAsync(async (req, res, next) => {
   const beritapatner = await BeritaPatner.findAll({});
@@ -26,26 +30,43 @@ exports.getAllBeritaPatner = catchAsync(async (req, res, next) => {
 exports.createBeritaPatner = catchAsync(async (req, res, next) => {
   const { title, description, summary, description2, description3, link } =
     req.body;
-  const { file } = req;
+  const { files } = req;
 
-  let url = '';
+  let photoUrl = '';
+  let gambar1Url = '';
+  let gambar2Url = '';
 
-  if (file) {
-    const uploadedFile = await fileHelper.upload(file.buffer);
+  if (files.photo_url) {
+    const uploadedFile = await fileHelper.upload(files.photo_url[0].buffer);
     if (!uploadedFile) {
-      return next(new AppError('Error uploading file', 400));
+      return next(new AppError('Error uploading photo_url', 400));
     }
+    photoUrl = uploadedFile.secure_url;
+  }
 
-    url = uploadedFile.secure_url;
+  if (files.gambar1) {
+    const uploadedFile = await fileHelper.upload(files.gambar1[0].buffer);
+    if (!uploadedFile) {
+      return next(new AppError('Error uploading gambar1', 400));
+    }
+    gambar1Url = uploadedFile.secure_url;
+  }
+
+  if (files.gambar2) {
+    const uploadedFile = await fileHelper.upload(files.gambar2[0].buffer);
+    if (!uploadedFile) {
+      return next(new AppError('Error uploading gambar2', 400));
+    }
+    gambar2Url = uploadedFile.secure_url;
   }
 
   const beritapatner = await BeritaPatner.create({
     title,
     description,
     summary,
-    photo_url: url,
-    gambar1: url,
-    gambar2: url,
+    photo_url: photoUrl,
+    gambar1: gambar1Url,
+    gambar2: gambar2Url,
     description2,
     description3,
     link,
@@ -62,7 +83,11 @@ exports.createBeritaPatner = catchAsync(async (req, res, next) => {
 exports.updateBeritaPatner = catchAsync(async (req, res, next) => {
   const { title, description, summary, description2, description3, link } =
     req.body;
-  const { file } = req;
+  const { files } = req;
+
+  let photoUrl = '';
+  let gambar1Url = '';
+  let gambar2Url = '';
 
   // Find the berita record by ID
   const beritapatner = await BeritaPatner.findByPk(req.params.id);
@@ -79,16 +104,31 @@ exports.updateBeritaPatner = catchAsync(async (req, res, next) => {
   if (description3) beritapatner.description3 = description3;
   if (link) beritapatner.link = link;
 
-  if (file) {
-    const uploadedFile = await fileHelper.upload(
-      file.buffer,
-      beritapatner.photo_url
-    );
+  if (files.photo_url) {
+    const uploadedFile = await fileHelper.upload(files.photo_url[0].buffer);
     if (!uploadedFile) {
-      return next(new AppError('Error uploading file', 400));
+      return next(new AppError('Error uploading photo_url', 400));
     }
+    photoUrl = uploadedFile.secure_url;
+    beritapatner.photo_url = photoUrl;
+  }
 
-    beritapatner.photo_url = uploadedFile.secure_url;
+  if (files.gambar1) {
+    const uploadedFile = await fileHelper.upload(files.gambar1[0].buffer);
+    if (!uploadedFile) {
+      return next(new AppError('Error uploading gambar1', 400));
+    }
+    gambar1Url = uploadedFile.secure_url;
+    beritapatner.gambar1 = gambar1Url;
+  }
+
+  if (files.gambar2) {
+    const uploadedFile = await fileHelper.upload(files.gambar2[0].buffer);
+    if (!uploadedFile) {
+      return next(new AppError('Error uploading gambar2', 400));
+    }
+    gambar2Url = uploadedFile.secure_url;
+    beritapatner.gambar2 = gambar2Url;
   }
 
   await beritapatner.save();

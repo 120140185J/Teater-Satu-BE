@@ -104,18 +104,6 @@ exports.updateBeritaKolaborasi = catchAsync(async (req, res, next) => {
   if (description3) beritakolaborasi.description3 = description3;
   if (link) beritakolaborasi.link = link;
 
-  // if (file) {
-  //   const uploadedFile = await fileHelper.upload(
-  //     file.buffer,
-  //     beritakolaborasi.photo_url
-  //   );
-  //   if (!uploadedFile) {
-  //     return next(new AppError('Error uploading file', 400));
-  //   }
-
-  //   beritakolaborasi.photo_url = uploadedFile.secure_url;
-  // }
-
   if (files.photo_url) {
     const uploadedFile = await fileHelper.upload(files.photo_url[0].buffer);
     if (!uploadedFile) {
