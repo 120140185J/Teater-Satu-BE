@@ -27,7 +27,6 @@ exports.getAllBerita = catchAsync(async (req, res, next) => {
   });
 });
 
-// filepath: /d:/kodingan yusuf/TA LULUS 2024!!!/Ta Capstone/koding/BE WEB TS/backend-teater-satu/controllers/beritaController.js
 exports.createBerita = catchAsync(async (req, res, next) => {
   const { title, description, summary, description2, description3, link } =
     req.body;
@@ -84,7 +83,7 @@ exports.createBerita = catchAsync(async (req, res, next) => {
 exports.updateBerita = catchAsync(async (req, res, next) => {
   const { title, description, summary, description2, description3, link } =
     req.body;
-  const { file } = req;
+  const { files } = req;
 
   // Find the berita record by ID
   const berita = await Berita.findByPk(req.params.id);
@@ -93,7 +92,7 @@ exports.updateBerita = catchAsync(async (req, res, next) => {
     return next(new AppError('No document found with that ID', 404));
   }
 
-  // Update the berita record with the new data
+  // Update text fields if provided
   if (title) berita.title = title;
   if (description) berita.description = description;
   if (summary) berita.summary = summary;
@@ -101,13 +100,31 @@ exports.updateBerita = catchAsync(async (req, res, next) => {
   if (description3) berita.description3 = description3;
   if (link) berita.link = link;
 
-  if (file) {
-    const uploadedFile = await fileHelper.upload(file.buffer, berita.photo_url);
+  // Handle photo_url update
+  if (files && files.photo_url) {
+    const uploadedFile = await fileHelper.upload(files.photo_url[0].buffer);
     if (!uploadedFile) {
-      return next(new AppError('Error uploading file', 400));
+      return next(new AppError('Error uploading photo_url', 400));
     }
-
     berita.photo_url = uploadedFile.secure_url;
+  }
+
+  // Handle gambar_1 update
+  if (files && files.gambar_1) {
+    const uploadedFile = await fileHelper.upload(files.gambar_1[0].buffer);
+    if (!uploadedFile) {
+      return next(new AppError('Error uploading gambar_1', 400));
+    }
+    berita.gambar_1 = uploadedFile.secure_url;
+  }
+
+  // Handle gambar_2 update
+  if (files && files.gambar_2) {
+    const uploadedFile = await fileHelper.upload(files.gambar_2[0].buffer);
+    if (!uploadedFile) {
+      return next(new AppError('Error uploading gambar_2', 400));
+    }
+    berita.gambar_2 = uploadedFile.secure_url;
   }
 
   await berita.save();
