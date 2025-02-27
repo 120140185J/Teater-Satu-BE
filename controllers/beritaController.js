@@ -81,12 +81,8 @@ exports.createBerita = catchAsync(async (req, res, next) => {
 });
 
 exports.updateBerita = catchAsync(async (req, res, next) => {
-  const { title, description, summary} = req.body;
-  const { files} = req;
-
-  let photoUrl = '';
-  let gambar1Url = '';
-  let gambar2Url = '';
+  const { title, description, summary } = req.body;
+  const { files } = req;
 
   // Find the berita record by ID
   const berita = await Berita.findByPk(req.params.id);
@@ -99,18 +95,18 @@ exports.updateBerita = catchAsync(async (req, res, next) => {
   if (title) berita.title = title;
   if (description) berita.description = description;
   if (summary) berita.summary = summary;
-  
-  if (file) {
-    const uploadedFile = await fileHelper.upload(file.buffer, berita.photo_url);
-    if (!uploadedFile) {
-      return next(new AppError('Error uploading file', 400));
-    }
 
+  // Handle photo_url update
+  if (files?.photo_url) {
+    const uploadedFile = await fileHelper.upload(files.photo_url[0].buffer, berita.photo_url);
+    if (!uploadedFile) {
+      return next(new AppError('Error uploading photo_url', 400));
+    }
     berita.photo_url = uploadedFile.secure_url;
   }
 
   // Handle gambar_1 update
-  if (files && files.gambar_1) {
+  if (files?.gambar_1) {
     const uploadedFile = await fileHelper.upload(files.gambar_1[0].buffer);
     if (!uploadedFile) {
       return next(new AppError('Error uploading gambar_1', 400));
@@ -119,7 +115,7 @@ exports.updateBerita = catchAsync(async (req, res, next) => {
   }
 
   // Handle gambar_2 update
-  if (files && files.gambar_2) {
+  if (files?.gambar_2) {
     const uploadedFile = await fileHelper.upload(files.gambar_2[0].buffer);
     if (!uploadedFile) {
       return next(new AppError('Error uploading gambar_2', 400));
@@ -134,6 +130,7 @@ exports.updateBerita = catchAsync(async (req, res, next) => {
     data: berita,
   });
 });
+
 
 exports.getBerita = catchAsync(async (req, res, next) => {
   const berita = await Berita.findByPk(req.params.id, {});
