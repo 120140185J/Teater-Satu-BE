@@ -11,11 +11,11 @@ const upload = multer({
   storage: multer.memoryStorage(),
 });
 
-exports.uploaddonasiPhotos = upload.fields([
+exports.uploadDonasiPhotos = upload.fields([
   { name: 'gambar', maxCount: 1 },
 ]);
 
-exports.getAlldonasi = catchAsync(async (req, res, next) => {
+exports.getAllDonasi = catchAsync(async (req, res, next) => {
   const donasi = await Donasi.findAll({});
 
   res.status(200).json({
@@ -25,13 +25,13 @@ exports.getAlldonasi = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.createdonasi = catchAsync(async (req, res, next) => {
+exports.createDonasi = catchAsync(async (req, res, next) => {
   const { paragraf1, paragraf2, paragraf3, link } = req.body;
   const { files } = req;
 
   let gambarUrl = '';
 
-  if (files.gambar) {
+  if (files && files.gambar) {
     const uploadedFile = await fileHelper.upload(files.gambar[0].buffer);
     if (!uploadedFile) {
       return next(new AppError('Error uploading gambar', 400));
@@ -39,7 +39,7 @@ exports.createdonasi = catchAsync(async (req, res, next) => {
     gambarUrl = uploadedFile.secure_url;
   }
 
-  const berita = await Donasi.create({
+  const donasi = await Donasi.create({
     gambar: gambarUrl,
     paragraf1,
     paragraf2,
@@ -50,16 +50,16 @@ exports.createdonasi = catchAsync(async (req, res, next) => {
   res.status(201).json({
     status: 'success',
     data: {
-      berita,
+      donasi,
     },
   });
 });
 
-exports.updatedonasi = catchAsync(async (req, res, next) => {
+exports.updateDonasi = catchAsync(async (req, res, next) => {
   const { paragraf1, paragraf2, paragraf3, link } = req.body;
   const { files } = req;
 
-  // Find the berita record by ID
+  // Find the donasi record by ID
   const donasi = await Donasi.findByPk(req.params.id);
 
   if (!donasi) {
@@ -90,7 +90,7 @@ exports.updatedonasi = catchAsync(async (req, res, next) => {
 });
 
 exports.getDonasi = catchAsync(async (req, res, next) => {
-  const donasi = await Donasi.findByPk(req.params.id, {});
+  const donasi = await Donasi.findByPk(req.params.id);
 
   if (!donasi) {
     return next(new AppError('No document found with that ID', 404));

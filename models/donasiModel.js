@@ -1,8 +1,8 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../utils/database');
 
-const Berita = sequelize.define(
-  'BeritaKolaborasi',
+const Donasi = sequelize.define(
+  'Donasi',
   {
     id: {
       type: DataTypes.UUID,
@@ -33,4 +33,4 @@ const Berita = sequelize.define(
   { timestamps: true }
 );
 
-module.exports = Berita;
+module.exports = Donasi;
