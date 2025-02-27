@@ -28,7 +28,8 @@ exports.getAllBeritaKolaborasi = catchAsync(async (req, res, next) => {
 });
 
 exports.createBeritaKolaborasi = catchAsync(async (req, res, next) => {
-  const { title, description, summary } = req.body;
+  const { title, description, summary, description2, description3, link } =
+    req.body;
   const { files } = req;
 
   let photoUrl = '';
@@ -66,6 +67,9 @@ exports.createBeritaKolaborasi = catchAsync(async (req, res, next) => {
     photo_url: photoUrl,
     gambar1: gambar1Url,
     gambar2: gambar2Url,
+    description2,
+    description3,
+    link,
   });
 
   res.status(201).json({
@@ -77,12 +81,9 @@ exports.createBeritaKolaborasi = catchAsync(async (req, res, next) => {
 });
 
 exports.updateBeritaKolaborasi = catchAsync(async (req, res, next) => {
-  const { title, description, summary } = req.body;
+  const { title, description, summary, description2, description3, link } =
+    req.body;
   const { files } = req;
-
-  let photoUrl = '';
-  let gambar1Url = '';
-  let gambar2Url = '';
 
   // Find the berita record by ID
   const beritakolaborasi = await BeritaKolaborasi.findByPk(req.params.id);
@@ -91,50 +92,40 @@ exports.updateBeritaKolaborasi = catchAsync(async (req, res, next) => {
     return next(new AppError('No document found with that ID', 404));
   }
 
-  // Update the berita record with the new data
+  // Update text fields if provided
   if (title) beritakolaborasi.title = title;
   if (description) beritakolaborasi.description = description;
   if (summary) beritakolaborasi.summary = summary;
+  if (description2) beritakolaborasi.description2 = description2;
+  if (description3) beritakolaborasi.description3 = description3;
+  if (link) beritakolaborasi.link = link;
 
-  // if (file) {
-  //   const uploadedFile = await fileHelper.upload(
-  //     file.buffer,
-  //     beritakolaborasi.photo_url
-  //   );
-  //   if (!uploadedFile) {
-  //     return next(new AppError('Error uploading file', 400));
-  //   }
-
-  //   beritakolaborasi.photo_url = uploadedFile.secure_url;
-  // }
-
-  if (files.photo_url) {
+  // Handle photo_url update
+  if (files && files.photo_url) {
     const uploadedFile = await fileHelper.upload(files.photo_url[0].buffer);
     if (!uploadedFile) {
       return next(new AppError('Error uploading photo_url', 400));
     }
-    photoUrl = uploadedFile.secure_url;
-    beritakolaborasi.photo_url = photoUrl;
+    beritakolaborasi.photo_url = uploadedFile.secure_url;
   }
 
-  if (files.gambar_1) {
+  // Handle gambar_1 update
+  if (files && files.gambar_1) {
     const uploadedFile = await fileHelper.upload(files.gambar_1[0].buffer);
     if (!uploadedFile) {
       return next(new AppError('Error uploading gambar_1', 400));
     }
-    gambar1Url = uploadedFile.secure_url;
-    beritakolaborasi.gambar1 = gambar1Url;
+    beritakolaborasi.gambar1 = uploadedFile.secure_url;
   }
 
-  if (files.gambar_2) {
+  // Handle gambar_2 update
+  if (files && files.gambar_2) {
     const uploadedFile = await fileHelper.upload(files.gambar_2[0].buffer);
     if (!uploadedFile) {
       return next(new AppError('Error uploading gambar_2', 400));
     }
-    gambar2Url = uploadedFile.secure_url;
-    beritakolaborasi.gambar2= gambar2Url
+    beritakolaborasi.gambar2 = uploadedFile.secure_url;
   }
-
 
   await beritakolaborasi.save();
 

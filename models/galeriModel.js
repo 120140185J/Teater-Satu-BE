@@ -29,6 +29,10 @@ const Galeri = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: false,
     },
+    gambarGaleri2: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   },
   { timestamps: false }
 );

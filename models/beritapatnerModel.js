@@ -15,9 +15,11 @@ const Berita = sequelize.define(
     },
     description: {
       type: DataTypes.TEXT,
+      allowNull: false,
     },
     summary: {
       type: DataTypes.TEXT,
+      allowNull: false,
     },
     photo_url: {
       type: DataTypes.STRING,
@@ -25,11 +27,23 @@ const Berita = sequelize.define(
     },
     gambar1: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     gambar2: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
+    },
+    description2: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    description3: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    link: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
   },
   { timestamps: true }
