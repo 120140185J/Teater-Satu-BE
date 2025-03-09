@@ -38,7 +38,7 @@ const User = sequelize.define(
     subscription_time: {
       type: DataTypes.DATE,
       allowNull: true,
-      defaultValue: 'infinity',
+      defaultValue: null,
     },
   },
   { timestamps: false }

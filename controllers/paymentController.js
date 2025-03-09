@@ -133,7 +133,7 @@ exports.createToken = catchAsync(async (req, res, next) => {
 });
 
 exports.webhook = catchAsync(async (req, res, next) => {
-  const notification = req.body;
+  const notification = req.body.result;
   console.log('Notif webhook: ', notification);
 
   if (
@@ -163,12 +163,12 @@ exports.webhook = catchAsync(async (req, res, next) => {
     const user = await User.findByPk(paymentHistory.id_user);
 
     // Generate bulan depan
-    const date = new Date();
-    date.setMonth(date.getMonth() + 1);
+    const date = new Date().getTime();
+    // date.setMonth(date+30 * 24 * 60 * 60 * 1000);
 
     if (user) {
       user.update({
-        subscription_time: date,
+        subscription_time: new Date(date + 30 * 24 * 60 * 60 * 1000),
       });
     }
   }
