@@ -98,7 +98,10 @@ exports.updateBerita = catchAsync(async (req, res, next) => {
 
   // Handle photo_url update
   if (files?.photo_url) {
-    const uploadedFile = await fileHelper.upload(files.photo_url[0].buffer, berita.photo_url);
+    const uploadedFile = await fileHelper.upload(
+      files.photo_url[0].buffer,
+      berita.photo_url
+    );
     if (!uploadedFile) {
       return next(new AppError('Error uploading photo_url', 400));
     }
@@ -130,7 +133,6 @@ exports.updateBerita = catchAsync(async (req, res, next) => {
     data: berita,
   });
 });
-
 
 exports.getBerita = catchAsync(async (req, res, next) => {
   const berita = await Berita.findByPk(req.params.id, {});

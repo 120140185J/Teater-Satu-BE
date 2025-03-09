@@ -5,13 +5,13 @@ const router = express.Router();
 
 router
   .route('/')
-  .get(ipvideoController.getAllIpvideos) // Mengambil semua data Ipvideo
-  .post(ipvideoController.createIpvideo); // Membuat data Ipvideo baru
+  .get(ipvideoController.getAllIpvideos)
+  .post(ipvideoController.uploadVideos, ipvideoController.createIpvideo);
 
 router
   .route('/:id')
-  .get(ipvideoController.getIpvideo) // Mengambil data Ipvideo berdasarkan ID
-  .patch(ipvideoController.updateIpvideo) // Memperbarui data Ipvideo berdasarkan ID
-  .delete(ipvideoController.deleteIpvideo); // Menghapus data Ipvideo berdasarkan ID
+  .get(ipvideoController.getIpvideo)
+  .patch(ipvideoController.uploadVideos, ipvideoController.updateIpvideo)
+  .delete(ipvideoController.deleteIpvideo);
 
 module.exports = router;

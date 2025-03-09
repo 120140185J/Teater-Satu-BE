@@ -8,7 +8,7 @@ const upload = async (fileBuffer, oldPublicId) => {
   });
 
   const options = {
-    resource_type: 'image',
+    resource_type: 'auto', // Deteksi otomatis gambar atau video
     public_id: `teatersatu/images/${Date.now()}`,
   };
 
@@ -26,7 +26,6 @@ const upload = async (fileBuffer, oldPublicId) => {
       .end(fileBuffer);
   });
 };
-
 
 module.exports = {
   upload,
