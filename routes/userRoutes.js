@@ -19,7 +19,7 @@ router.patch(
 router
   .route('/')
   .get(userController.getAllUsers)
-  .post(userController.createUser);
+  .post(userController.uploadUserPhoto, userController.createUser); // Tambahkan uploadUserPhoto
 
 router
   .route('/:id')

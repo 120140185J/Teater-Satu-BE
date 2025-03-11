@@ -1,12 +1,10 @@
 const { DataTypes, Model } = require('sequelize');
 const bcrypt = require('bcryptjs');
 const sequelize = require('../utils/database');
-// const { subscription } = require('../controllers/authController');
 
 const User = sequelize.define(
   'User',
   {
-    // make id uuid
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
@@ -34,7 +32,6 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
-    // waktu tenggat subscription dibuat 3 opsi 1 bulan 3 bulan dan infinity
     subscription_time: {
       type: DataTypes.DATE,
       allowNull: true,

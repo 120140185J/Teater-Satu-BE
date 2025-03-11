@@ -175,7 +175,10 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   }
 
   // Periksa apakah password lama cocok
-  const isPasswordCorrect = await user.matchPassword(password_current, user.password);
+  const isPasswordCorrect = await user.matchPassword(
+    password_current,
+    user.password
+  );
   if (!isPasswordCorrect) {
     return next(new AppError('Your current password is wrong.', 401));
   }
