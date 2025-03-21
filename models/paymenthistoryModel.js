@@ -38,6 +38,10 @@ const Paymenthistory = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    type : {
+      type: DataTypes.STRING,
+      allowNull: true,
+    }
   },
   { timestamps: true }
 );
