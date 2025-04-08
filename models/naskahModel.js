@@ -12,27 +12,39 @@ const Naskah = sequelize.define(
     namaNaskah: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: { notEmpty: true },
     },
     fotoThumbnail: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true, // Ubah jadi opsional
+      validate: { isUrl: true },
+    },
+    fileUrl: {
+      // Kolom baru untuk .pdf dan .docx
+      type: DataTypes.STRING,
+      allowNull: true,
+      validate: { isUrl: true },
     },
     pengarang: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: { notEmpty: true },
     },
     isiNaskah: {
       type: DataTypes.TEXT,
       allowNull: false,
+      validate: { notEmpty: true },
     },
     linknaskah: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: { notEmpty: true, isUrl: true },
     },
-    
-    
   },
-  { timestamps: false }
+  {
+    timestamps: true,
+    tableName: 'Naskah',
+  }
 );
 
 module.exports = Naskah;
