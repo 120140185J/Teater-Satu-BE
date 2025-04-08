@@ -32,6 +32,7 @@ exports.getHistoryPaymentByIdUser = catchAsync(async (req, res, next) => {
     ],
     where: {
       id_user: idUser,
+      type: 'subscription',
     },
   });
 
@@ -95,6 +96,7 @@ exports.createToken = catchAsync(async (req, res, next) => {
       },
     }
   );
+  console.log(response)
 
   // Create payment history
   const cekOrderUserId = await Paymenthistory.findOne({
@@ -121,6 +123,7 @@ exports.createToken = catchAsync(async (req, res, next) => {
   await Paymenthistory.create({
     id_user: body.id_user,
     order_id: orderId,
+    type : body.type,
     gross_amount: grossAmount,
     transaction_time: new Date(),
     transaction_status: 'pending',
@@ -171,6 +174,39 @@ exports.webhook = catchAsync(async (req, res, next) => {
         subscription_time: new Date(date + 30 * 24 * 60 * 60 * 1000),
       });
     }
+  }
+
+  res.status(200).json({ status: 'Notification received' });
+});
+
+exports.webhookTicket = catchAsync(async (req, res, next) => {
+  const notification = req.body.result;
+  console.log('Notif webhook: ', notification);
+
+  if (
+    (notification.transaction_status === 'capture' ||
+      notification.transaction_status === 'settlement') &&
+    notification.fraud_status === 'accept'
+  ) {
+    // Do your business logic here
+    console.log('Transaction Success: ', req.body);
+
+    // Update Payment History
+    const paymentHistory = await Paymenthistory.findOne({
+      where: {
+        order_id: notification.order_id,
+      },
+    });
+
+    if (paymentHistory) {
+      paymentHistory.update({
+        transaction_status: notification.transaction_status,
+        fraud_status: notification.fraud_status,
+        payment_type: notification.payment_type,
+      });
+    }
+
+    
   }
 
   res.status(200).json({ status: 'Notification received' });
