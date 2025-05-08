@@ -32,10 +32,10 @@ const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errController');
 const paymentRouter = require('./routes/paymentRoutes');
 const tiketRouter = require('./routes/tiketRoutes');
+const { startCronJobs } = require('./utils/cronJobs');
 
 const app = express();
 
-// add cors
 app.use(cors());
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
 app.use(express.json());
@@ -73,21 +73,21 @@ app.use('/api/v1/naskahs', naskahRouter);
 app.use('/api/v1/image', imageRouter);
 app.use('/api/v1/landingpageimages', landingpageimageRouter);
 app.use('/api/v1/payment', paymentRouter);
-app.use('/api/v1/tiket', tiketRouter);
+app.use('/api/v1', tiketRouter);
 
 app.use('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
+
 const sequelize = require('./utils/database');
 
-const sync = async () => await sequelize.sync({ force: false });
-sync()
-  .then(() => {
-    console.log('Database synced successfully');
-  })
-  .catch((error) => {
-    console.error('Error syncing database:', error);
-  });
+const sync = async () => {
+  await sequelize.sync({ force: false });
+  startCronJobs();
+};
+sync().catch((error) => {
+  console.error('[APP] Error syncing database:', error.message, error.stack);
+});
 
 app.use(globalErrorHandler);
 

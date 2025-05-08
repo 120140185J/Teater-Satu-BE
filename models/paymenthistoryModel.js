@@ -1,13 +1,14 @@
-const { DataTypes } = require('sequelize');
+const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../utils/database');
 const User = require('./userModel');
 
 const Paymenthistory = sequelize.define(
-  'payment_history',
+  'Paymenthistory',
   {
     id: {
       type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      defaultValue: Sequelize.UUIDV4,
+      allowNull: false,
       primaryKey: true,
     },
     id_user: {
@@ -28,7 +29,7 @@ const Paymenthistory = sequelize.define(
     },
     transaction_time: {
       type: DataTypes.DATE,
-      allowNull: false,
+      allowNull: true,
     },
     transaction_status: {
       type: DataTypes.STRING,
@@ -38,17 +39,20 @@ const Paymenthistory = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
-    type : {
+    type: {
       type: DataTypes.STRING,
       allowNull: true,
-    }
+    },
   },
-  { timestamps: true }
+  {
+    tableName: 'payment_histories',
+    timestamps: true,
+  }
 );
 
-// Paymenthistory many to one User
 Paymenthistory.belongsTo(User, {
   foreignKey: 'id_user',
+  targetKey: 'id',
   as: 'user',
 });
 

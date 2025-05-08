@@ -1,4 +1,5 @@
 const multer = require('multer');
+const bcrypt = require('bcryptjs');
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
@@ -28,9 +29,9 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   if (req.body.password || req.body.passwordConfirm) {
     return next(
       new AppError(
-        'This route is not for password updates. Please use /updateMyPassword.'
-      ),
-      400
+        'This route is not for password updates. Please use /updateMyPassword.',
+        400
+      )
     );
   }
 
@@ -90,27 +91,24 @@ exports.updateUserPhoto = catchAsync(async (req, res, next) => {
 });
 
 exports.createUser = catchAsync(async (req, res, next) => {
-  // Log untuk debugging
-  console.log('Request body:', req.body);
-  console.log('Request file:', req.file);
+  console.log('Create User - Request body:', req.body);
+  console.log('Create User - Request file:', req.file);
 
   const { email, name, password, role, subscription_time } = req.body;
 
-  // Validasi field wajib
   if (!email || !name || !password) {
     return next(new AppError('Email, name, dan password wajib diisi', 400));
   }
 
-  // Buat objek data user
   const userData = {
     email,
     name,
     password,
     role: role || 'user',
-    subscription_time: subscription_time || null,
+    subscription_time:
+      subscription_time && subscription_time !== '' ? subscription_time : null,
   };
 
-  // Tangani upload foto jika ada
   if (req.file) {
     const uploadedFile = await fileHelper.upload(req.file.buffer);
     if (!uploadedFile) {
@@ -119,8 +117,8 @@ exports.createUser = catchAsync(async (req, res, next) => {
     userData.photo = uploadedFile.secure_url;
   }
 
-  // Buat user baru
   const newUser = await User.create(userData);
+  console.log('Create User - Created:', newUser.dataValues);
 
   res.status(201).json({
     status: 'success',
@@ -130,8 +128,64 @@ exports.createUser = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.updateUser = catchAsync(async (req, res, next) => {
+  console.log(
+    'Update User - Raw request body:',
+    req.body.toString ? req.body.toString() : req.body
+  );
+  console.log('Update User - Parsed request body:', req.body);
+  console.log('Update User - Request file:', req.file);
+
+  const user = await User.findByPk(req.params.id);
+  if (!user) {
+    return next(new AppError('No document found with that ID', 404));
+  }
+
+  const updates = {
+    email: req.body.email || user.email,
+    name: req.body.name || user.name,
+    role: req.body.role || user.role,
+    subscription_time:
+      req.body.subscription_time === '' || req.body.subscription_time === null
+        ? null
+        : req.body.subscription_time || user.subscription_time,
+  };
+
+  if (req.body.password && req.body.password !== '') {
+    const DEFAULT_SALT_ROUNDS = 10;
+    updates.password = await bcrypt.hash(
+      req.body.password,
+      DEFAULT_SALT_ROUNDS
+    );
+  }
+
+  if (req.file) {
+    const uploadedFile = await fileHelper.upload(
+      req.file.buffer,
+      user.photo_url
+    );
+    if (!uploadedFile) {
+      return next(new AppError('Gagal mengunggah foto', 400));
+    }
+    updates.photo = uploadedFile.secure_url;
+  }
+
+  console.log('Update User - Before update:', user.dataValues);
+  console.log('Update User - Updates to apply:', updates);
+
+  await user.update(updates);
+  await user.reload();
+
+  console.log('Update User - After update:', user.dataValues);
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user,
+    },
+  });
+});
+
 exports.getAllUsers = factory.getAll(User);
 exports.getUser = factory.getOne(User);
-exports.createUser = factory.createOne(User);
-exports.updateUser = factory.updateOne(User);
 exports.deleteUser = factory.deleteOne(User);

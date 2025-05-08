@@ -3,13 +3,17 @@ const tiketController = require('../controllers/tiketController');
 
 const router = express.Router();
 
-router
-  .route('/user/pesan')
-  .post(tiketController.buyTiketUser);
+router.route('/user/pesan').post(tiketController.buyTiketUser);
+
+router.route('/user/history').get(tiketController.getHistoryTiketUser);
+
+router.route('/history').get(tiketController.getAllHistoryTiket);
+
+router.route('/history/tiket').get(tiketController.getHistoryTiketByTiketId);
 
 router
-  .route('/user/history')
-  .get(tiketController.getHistoryTiketUser);
+  .route('/history/confirm/:id')
+  .patch(tiketController.updateConfirmationStatus);
 
 router
   .route('/')

@@ -78,14 +78,12 @@ exports.updateTiket = catchAsync(async (req, res, next) => {
     jumlah_stok_tiket,
   } = req.body;
 
-  // Find the berita record by ID
   const tiket = await Tiket.findByPk(req.params.id);
 
   if (!tiket) {
     return next(new AppError('No document found with that ID', 404));
   }
 
-  // Update the berita record with the new data
   if (nama_pertujukan) tiket.nama_pertujukan = nama_pertujukan;
   if (tanggal_pertujukan) tiket.tanggal_pertujukan = tanggal_pertujukan;
   if (tempat_pertujukan) tiket.tempat_pertujukan = tempat_pertujukan;
@@ -160,6 +158,11 @@ exports.buyTiketUser = catchAsync(async (req, res, next) => {
 });
 
 exports.getHistoryTiketUser = catchAsync(async (req, res, next) => {
+  console.log('Accessing getHistoryTiketUser with id_user:', req.query.id_user);
+  if (!req.query.id_user) {
+    return next(new AppError('Please provide id_user', 400));
+  }
+
   const historyBuyTiket = await HistoryBuyTiket.findAll({
     order: [['createdAt', 'DESC']],
     where: {
@@ -173,8 +176,32 @@ exports.getHistoryTiketUser = catchAsync(async (req, res, next) => {
       },
       {
         model: Tiket,
-        as: 'tiket'
-      }
+        as: 'tiket',
+      },
+    ],
+  });
+
+  console.log('History found:', historyBuyTiket);
+  res.status(200).json({
+    status: 'success',
+    results: historyBuyTiket.length,
+    data: historyBuyTiket,
+  });
+});
+
+exports.getAllHistoryTiket = catchAsync(async (req, res, next) => {
+  const historyBuyTiket = await HistoryBuyTiket.findAll({
+    order: [['createdAt', 'DESC']],
+    include: [
+      {
+        model: User,
+        as: 'user',
+        attributes: ['name', 'email', 'subscription_time'],
+      },
+      {
+        model: Tiket,
+        as: 'tiket',
+      },
     ],
   });
 
@@ -182,5 +209,65 @@ exports.getHistoryTiketUser = catchAsync(async (req, res, next) => {
     status: 'success',
     results: historyBuyTiket.length,
     data: historyBuyTiket,
+  });
+});
+
+exports.getHistoryTiketByTiketId = catchAsync(async (req, res, next) => {
+  console.log(
+    'Accessing getHistoryTiketByTiketId with id_tiket:',
+    req.query.id_tiket
+  );
+  if (!req.query.id_tiket) {
+    return next(new AppError('Please provide id_tiket', 400));
+  }
+
+  const historyBuyTiket = await HistoryBuyTiket.findAll({
+    order: [['createdAt', 'DESC']],
+    where: {
+      id_tiket: req.query.id_tiket,
+    },
+    include: [
+      {
+        model: User,
+        as: 'user',
+        attributes: ['name', 'email', 'subscription_time'],
+      },
+      {
+        model: Tiket,
+        as: 'tiket',
+      },
+    ],
+  });
+
+  console.log('History found for tiket:', historyBuyTiket);
+  res.status(200).json({
+    status: 'success',
+    results: historyBuyTiket.length,
+    data: historyBuyTiket,
+  });
+});
+
+exports.updateConfirmationStatus = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const { is_confirmed } = req.body;
+
+  if (typeof is_confirmed !== 'boolean') {
+    return next(
+      new AppError('Please provide a boolean value for is_confirmed', 400)
+    );
+  }
+
+  const history = await HistoryBuyTiket.findByPk(id);
+
+  if (!history) {
+    return next(new AppError('No history found with that ID', 404));
+  }
+
+  history.is_confirmed = is_confirmed;
+  await history.save();
+
+  res.status(200).json({
+    status: 'success',
+    data: history,
   });
 });

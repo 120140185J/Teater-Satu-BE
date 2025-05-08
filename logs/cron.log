@@ -1,0 +1,92 @@
+[2025-05-07T19:04:52.443Z] Memulai inisialisasi cron job
+[2025-05-07T19:04:52.455Z] Cron job berhasil dijadwalkan
+[2025-05-07T19:06:09.815Z] Memulai inisialisasi cron job
+[2025-05-07T19:06:09.823Z] Cron job berhasil dijadwalkan
+[2025-05-07T19:07:47.393Z] Memulai inisialisasi cron job
+[2025-05-07T19:07:47.407Z] Cron job berhasil dijadwalkan
+[2025-05-07T19:12:54.902Z] Memulai inisialisasi cron job
+[2025-05-07T19:12:54.926Z] Cron job berhasil dijadwalkan
+[2025-05-07T19:12:59.722Z] Memulai inisialisasi cron job
+[2025-05-07T19:12:59.732Z] Cron job berhasil dijadwalkan
+[2025-05-07T19:13:15.424Z] Memulai inisialisasi cron job
+[2025-05-07T19:13:15.433Z] Cron job berhasil dijadwalkan
+[2025-05-07T19:13:25.444Z] Menjalankan tes manual cron job
+[2025-05-07T19:13:25.447Z] Mulai cron job
+[2025-05-07T19:13:25.451Z] Waktu saat ini (ms): 1746645205451
+[2025-05-07T19:13:25.492Z] Jumlah record pending: 11
+[2025-05-07T19:13:25.495Z] Record - order_id: 1739883889193, transaction_time: Tue Feb 18 2025 20:04:51 GMT+0700 (Western Indonesia Time), selisih waktu (jam): 1878.14
+[2025-05-07T19:13:25.496Z] Record - order_id: 1745999071137, transaction_time: Wed Apr 30 2025 14:44:31 GMT+0700 (Western Indonesia Time), selisih waktu (jam): 179.48
+[2025-05-07T19:13:25.498Z] Record - order_id: 1737814358635, transaction_time: Sat Jan 25 2025 21:12:38 GMT+0700 (Western Indonesia Time), selisih waktu (jam): 2453.01
+[2025-05-07T19:13:25.500Z] Record - order_id: 1737624582209, transaction_time: Thu Jan 23 2025 16:29:42 GMT+0700 (Western Indonesia Time), selisih waktu (jam): 2505.73
+[2025-05-07T19:13:25.502Z] Record - order_id: 1737813772749, transaction_time: Sat Jan 25 2025 21:03:01 GMT+0700 (Western Indonesia Time), selisih waktu (jam): 2453.17
+[2025-05-07T19:13:25.503Z] Record - order_id: 1737813770987, transaction_time: Sat Jan 25 2025 21:02:55 GMT+0700 (Western Indonesia Time), selisih waktu (jam): 2453.18
+[2025-05-07T19:13:25.504Z] Record - order_id: 1737625061636, transaction_time: Thu Jan 23 2025 16:37:41 GMT+0700 (Western Indonesia Time), selisih waktu (jam): 2505.60
+[2025-05-07T19:13:25.508Z] Record - order_id: 1739961610264, transaction_time: Wed Feb 19 2025 17:40:11 GMT+0700 (Western Indonesia Time), selisih waktu (jam): 1856.55
+[2025-05-07T19:13:25.514Z] Record - order_id: 1739958113003, transaction_time: Wed Feb 19 2025 16:41:54 GMT+0700 (Western Indonesia Time), selisih waktu (jam): 1857.53
+[2025-05-07T19:13:25.516Z] Record - order_id: 1739958154641, transaction_time: Wed Feb 19 2025 16:42:34 GMT+0700 (Western Indonesia Time), selisih waktu (jam): 1857.51
+[2025-05-07T19:13:25.518Z] Record - order_id: 1737814355021, transaction_time: Sat Jan 25 2025 21:12:35 GMT+0700 (Western Indonesia Time), selisih waktu (jam): 2453.01
+[2025-05-07T19:13:25.519Z] Akan ubah ke Terminated - order_id: 1739883889193
+[2025-05-07T19:13:25.520Z] Akan ubah ke Terminated - order_id: 1745999071137
+[2025-05-07T19:13:25.522Z] Akan ubah ke Terminated - order_id: 1737814358635
+[2025-05-07T19:13:25.535Z] Akan ubah ke Terminated - order_id: 1737624582209
+[2025-05-07T19:13:25.539Z] Akan ubah ke Terminated - order_id: 1737813772749
+[2025-05-07T19:13:25.543Z] Akan ubah ke Terminated - order_id: 1737813770987
+[2025-05-07T19:13:25.551Z] Akan ubah ke Terminated - order_id: 1737625061636
+[2025-05-07T19:13:25.552Z] Akan ubah ke Terminated - order_id: 1739961610264
+[2025-05-07T19:13:25.556Z] Akan ubah ke Terminated - order_id: 1739958113003
+[2025-05-07T19:13:25.558Z] Akan ubah ke Terminated - order_id: 1739958154641
+[2025-05-07T19:13:25.567Z] Akan ubah ke Terminated - order_id: 1737814355021
+[2025-05-07T19:13:25.605Z] Jumlah record yang akan diubah: 11
+[2025-05-07T19:13:25.975Z] Berhasil ubah ke Terminated dan kosongkan subscription_time - order_id: 1739883889193
+[2025-05-07T19:13:26.001Z] Berhasil ubah ke Terminated dan kosongkan subscription_time - order_id: 1745999071137
+[2025-05-07T19:13:26.028Z] Berhasil ubah ke Terminated dan kosongkan subscription_time - order_id: 1737813770987
+[2025-05-07T19:13:26.049Z] Berhasil ubah ke Terminated dan kosongkan subscription_time - order_id: 1739961610264
+[2025-05-07T19:13:26.065Z] Berhasil ubah ke Terminated dan kosongkan subscription_time - order_id: 1739958113003
+[2025-05-07T19:13:26.081Z] Berhasil ubah ke Terminated dan kosongkan subscription_time - order_id: 1739958154641
+[2025-05-07T19:13:26.092Z] Berhasil ubah ke Terminated dan kosongkan subscription_time - order_id: 1737814355021
+[2025-05-07T19:13:26.101Z] Berhasil ubah ke Terminated dan kosongkan subscription_time - order_id: 1737814358635
+[2025-05-07T19:13:26.107Z] Berhasil ubah ke Terminated dan kosongkan subscription_time - order_id: 1737624582209
+[2025-05-07T19:13:26.114Z] Berhasil ubah ke Terminated dan kosongkan subscription_time - order_id: 1737813772749
+[2025-05-07T19:13:26.119Z] Berhasil ubah ke Terminated dan kosongkan subscription_time - order_id: 1737625061636
+[2025-05-07T19:13:26.123Z] Selesai cron job
+[2025-05-07T19:13:33.128Z] Memulai inisialisasi cron job
+[2025-05-07T19:13:33.136Z] Cron job berhasil dijadwalkan
+[2025-05-07T19:13:43.139Z] Menjalankan tes manual cron job
+[2025-05-07T19:13:43.141Z] Mulai cron job
+[2025-05-07T19:13:43.142Z] Waktu saat ini (ms): 1746645223142
+[2025-05-07T19:13:43.149Z] Jumlah record pending: 0
+[2025-05-07T19:13:43.150Z] Jumlah record yang akan diubah: 0
+[2025-05-07T19:13:43.151Z] Selesai cron job
+[2025-05-07T19:15:00.661Z] Mulai cron job
+[2025-05-07T19:15:00.662Z] Waktu saat ini (ms): 1746645300662
+[2025-05-07T19:15:00.668Z] Jumlah record pending: 0
+[2025-05-07T19:15:00.669Z] Jumlah record yang akan diubah: 0
+[2025-05-07T19:15:00.670Z] Selesai cron job
+[2025-05-07T19:17:04.217Z] Memulai inisialisasi cron job
+[2025-05-07T19:17:04.230Z] Cron job berhasil dijadwalkan
+[2025-05-07T19:17:14.255Z] Menjalankan tes manual cron job
+[2025-05-07T19:17:14.256Z] Mulai cron job
+[2025-05-07T19:17:14.259Z] Waktu saat ini (ms): 1746645434259
+[2025-05-07T19:17:14.279Z] Jumlah record pending: 0
+[2025-05-07T19:17:14.280Z] Jumlah record yang akan diubah: 0
+[2025-05-07T19:17:14.281Z] Selesai cron job
+[2025-05-07T19:20:00.204Z] Mulai cron job
+[2025-05-07T19:20:00.205Z] Waktu saat ini (ms): 1746645600205
+[2025-05-07T19:20:00.213Z] Jumlah record pending: 0
+[2025-05-07T19:20:00.214Z] Jumlah record yang akan diubah: 0
+[2025-05-07T19:20:00.215Z] Selesai cron job
+[2025-05-07T19:25:00.894Z] Mulai cron job
+[2025-05-07T19:25:00.900Z] Waktu saat ini (ms): 1746645900900
+[2025-05-07T19:25:00.921Z] Jumlah record pending: 0
+[2025-05-07T19:25:00.922Z] Jumlah record yang akan diubah: 0
+[2025-05-07T19:25:00.922Z] Selesai cron job
+[2025-05-07T19:25:29.283Z] Memulai inisialisasi cron job
+[2025-05-07T19:25:29.307Z] Cron job berhasil dijadwalkan
+[2025-05-07T19:25:39.322Z] Menjalankan tes manual cron job
+[2025-05-07T19:25:39.324Z] Mulai cron job
+[2025-05-07T19:25:39.325Z] Waktu saat ini (ms): 1746645939325
+[2025-05-07T19:25:39.334Z] Jumlah record pending: 0
+[2025-05-07T19:25:39.335Z] Jumlah record yang akan diubah: 0
+[2025-05-07T19:25:39.336Z] Selesai cron job
+[2025-05-07T19:25:46.297Z] Memulai inisialisasi cron job
+[2025-05-07T19:25:46.304Z] Cron job berhasil dijadwalkan

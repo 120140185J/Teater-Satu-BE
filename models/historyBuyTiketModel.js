@@ -23,26 +23,23 @@ const HistoryBuyTiket = sequelize.define(
       type: DataTypes.UUID,
       allowNull: false,
     },
+    jumlah_tiket: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     id_user: {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    jumlah_tiket: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+    is_confirmed: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
   },
   { timestamps: true }
 );
 
-HistoryBuyTiket.belongsTo(User, {
-  foreignKey: 'id_user',
-  as: 'user',
-});
-
-HistoryBuyTiket.belongsTo(Tiket, {
-  foreignKey: 'id_tiket',
-  as: 'tiket',
-});
+HistoryBuyTiket.belongsTo(User, { foreignKey: 'id_user', as: 'user' });
+HistoryBuyTiket.belongsTo(Tiket, { foreignKey: 'id_tiket', as: 'tiket' });
 
 module.exports = HistoryBuyTiket;

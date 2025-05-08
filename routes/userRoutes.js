@@ -1,30 +1,21 @@
 const express = require('express');
+const userController = require('../controllers/userController');
+const authController = require('../controllers/authController');
 
 const router = express.Router();
 
-const authController = require('../controllers/authController');
-const userController = require('../controllers/userController');
-
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
-router.post('/subscription', authController.subscription);
-router.post('/update-password', authController.updatePassword);
-
-router.patch(
-  '/update-photo/:id',
-  userController.uploadUserPhoto,
-  userController.updateUserPhoto
-);
 
 router
   .route('/')
   .get(userController.getAllUsers)
-  .post(userController.uploadUserPhoto, userController.createUser); // Tambahkan uploadUserPhoto
+  .post(userController.uploadUserPhoto, userController.createUser);
 
 router
   .route('/:id')
   .get(userController.getUser)
-  .patch(userController.updateUser)
+  .patch(userController.uploadUserPhoto, userController.updateUser)
   .delete(userController.deleteUser);
 
 module.exports = router;

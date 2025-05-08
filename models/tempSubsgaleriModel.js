@@ -25,6 +25,14 @@ const TempSubsgaleri = sequelize.define(
 Subsgaleri.hasMany(TempSubsgaleri, {
   foreignKey: 'id_subs_galeri',
   as: 'tempSubsgaleri',
+  onDelete: 'CASCADE', // Tambahkan ON DELETE CASCADE
+  onUpdate: 'CASCADE',
+});
+
+TempSubsgaleri.belongsTo(Subsgaleri, {
+  foreignKey: 'id_subs_galeri',
+  onDelete: 'CASCADE', // Pastikan konsistensi
+  onUpdate: 'CASCADE',
 });
 
 module.exports = TempSubsgaleri;

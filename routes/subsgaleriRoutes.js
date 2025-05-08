@@ -13,4 +13,6 @@ router
   .patch(subsgaleri.uploadSubsgaleriPhoto, subsgaleri.updateSubsgaleri)
   .delete(subsgaleri.deleteSubsgaleri);
 
+router.route('/temp/:id_subs_galeri').delete(subsgaleri.deleteTempSubsgaleri);
+
 module.exports = router;

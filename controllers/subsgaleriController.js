@@ -24,7 +24,7 @@ exports.getAllSubsgaleri = catchAsync(async (req, res, next) => {
         as: 'tempSubsgaleri',
         attributes: ['id', 'image'],
       },
-    ]
+    ],
   });
 
   res.status(200).json({
@@ -36,7 +36,7 @@ exports.getAllSubsgaleri = catchAsync(async (req, res, next) => {
 
 exports.createSubsgaleri = catchAsync(async (req, res, next) => {
   const { judul, karya, deskripsi } = req.body;
-  const { files } = req; // Multiple files
+  const { files } = req;
 
   if (!judul) {
     return next(new AppError('Judul is required', 400));
@@ -49,7 +49,6 @@ exports.createSubsgaleri = catchAsync(async (req, res, next) => {
   const transaction = await sequelize.transaction();
 
   try {
-    // Upload all images and get URLs
     const urls = await Promise.all(
       files.map(async (file) => {
         const uploadedFile = await fileHelper.upload(file.buffer);
@@ -60,10 +59,8 @@ exports.createSubsgaleri = catchAsync(async (req, res, next) => {
       })
     );
 
-    // Thumbnail is the first image
     const thumbnail = urls.shift();
 
-    // Create Subsgaleri record
     const subsgaleri = await Subsgaleri.create(
       {
         judul,
@@ -74,7 +71,6 @@ exports.createSubsgaleri = catchAsync(async (req, res, next) => {
       { transaction }
     );
 
-    // Insert remaining images into TempSubsgaleri
     const tempSubsgaleriData = urls.map((url) => ({
       id_subs_galeri: subsgaleri.id,
       image: url,
@@ -82,7 +78,6 @@ exports.createSubsgaleri = catchAsync(async (req, res, next) => {
 
     await TempSubsgaleri.bulkCreate(tempSubsgaleriData, { transaction });
 
-    // Commit transaction
     await transaction.commit();
 
     res.status(201).json({
@@ -90,7 +85,6 @@ exports.createSubsgaleri = catchAsync(async (req, res, next) => {
       data: subsgaleri,
     });
   } catch (error) {
-    // Rollback transaction on error
     await transaction.rollback();
     return next(new AppError('Failed to create subsgaleri', 500));
   }
@@ -98,28 +92,23 @@ exports.createSubsgaleri = catchAsync(async (req, res, next) => {
 
 exports.updateSubsgaleri = catchAsync(async (req, res, next) => {
   const { judul, karya, deskripsi } = req.body;
-  const { files } = req; // Multiple files
+  const { files } = req;
   const subsgaleriId = req.params.id;
 
-  // Cari data subsgaleri berdasarkan ID
   const subsgaleri = await Subsgaleri.findByPk(subsgaleriId);
 
   if (!subsgaleri) {
     return next(new AppError('No document found with that ID', 404));
   }
 
-  // Gunakan transaksi untuk memastikan konsistensi data
   const transaction = await sequelize.transaction();
 
   try {
-    // Perbarui data utama subsgaleri
     if (judul) subsgaleri.judul = judul;
     if (karya) subsgaleri.karya = karya;
     if (deskripsi) subsgaleri.deskripsi = deskripsi;
 
-    // Perbarui thumbnail jika ada file baru
     if (files && files.length > 0) {
-      // Ambil file pertama untuk thumbnail
       const firstFile = files[0];
       const uploadedThumbnail = await fileHelper.upload(firstFile.buffer);
 
@@ -127,17 +116,14 @@ exports.updateSubsgaleri = catchAsync(async (req, res, next) => {
         throw new AppError('Error uploading thumbnail', 400);
       }
 
-      // Hapus thumbnail lama jika diperlukan
       if (subsgaleri.thumbnail) {
         await fileHelper.delete(subsgaleri.thumbnail);
       }
 
       subsgaleri.thumbnail = uploadedThumbnail.secure_url;
 
-      // Sisa file untuk TempSubsgaleri
       const remainingFiles = files.slice(1);
 
-      // Upload sisa file ke TempSubsgaleri
       if (remainingFiles.length > 0) {
         const tempSubsgaleriData = await Promise.all(
           remainingFiles.map(async (file) => {
@@ -153,15 +139,12 @@ exports.updateSubsgaleri = catchAsync(async (req, res, next) => {
           })
         );
 
-        // Tambahkan data baru ke TempSubsgaleri
         await TempSubsgaleri.bulkCreate(tempSubsgaleriData, { transaction });
       }
     }
 
-    // Simpan perubahan subsgaleri
     await subsgaleri.save({ transaction });
 
-    // Commit transaksi
     await transaction.commit();
 
     res.status(200).json({
@@ -169,7 +152,6 @@ exports.updateSubsgaleri = catchAsync(async (req, res, next) => {
       data: subsgaleri,
     });
   } catch (error) {
-    // Rollback transaksi jika ada kesalahan
     await transaction.rollback();
     return next(new AppError('Failed to update subsgaleri', 500));
   }
@@ -197,4 +179,126 @@ exports.getSubGaleri = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.deleteSubsgaleri = handlerFactory.deleteOne(Subsgaleri);
+exports.deleteTempSubsgaleri = catchAsync(async (req, res, next) => {
+  const { id_subs_galeri } = req.params;
+
+  const tempSubsgaleri = await TempSubsgaleri.findAll({
+    where: { id_subs_galeri },
+  });
+
+  if (tempSubsgaleri.length === 0) {
+    return res.status(204).json({
+      status: 'success',
+      data: null,
+    });
+  }
+
+  const transaction = await sequelize.transaction();
+
+  try {
+    // Coba hapus file dari storage, tapi lanjutkan jika gagal
+    await Promise.all(
+      tempSubsgaleri.map(async (img) => {
+        try {
+          await fileHelper.delete(img.image);
+          console.log(`Deleted file: ${img.image}`);
+        } catch (error) {
+          console.error(`Failed to delete file ${img.image}:`, error.message);
+          // Lanjutkan meskipun penghapusan file gagal
+        }
+      })
+    );
+
+    // Hapus record dari temp_subs_galeris
+    await TempSubsgaleri.destroy({
+      where: { id_subs_galeri },
+      transaction,
+    });
+
+    await transaction.commit();
+
+    console.log(
+      `Deleted ${tempSubsgaleri.length} temp subsgaleri records for id_subs_galeri: ${id_subs_galeri}`
+    );
+
+    res.status(204).json({
+      status: 'success',
+      data: null,
+    });
+  } catch (error) {
+    await transaction.rollback();
+    console.error('Error deleting temp subsgaleri:', {
+      message: error.message,
+      stack: error.stack,
+    });
+    return next(new AppError('Failed to delete temp subsgaleri', 500));
+  }
+});
+
+exports.deleteSubsgaleri = catchAsync(async (req, res, next) => {
+  const subsgaleriId = req.params.id;
+
+  const subsgaleri = await Subsgaleri.findByPk(subsgaleriId);
+
+  if (!subsgaleri) {
+    return next(new AppError('No document found with that ID', 404));
+  }
+
+  const transaction = await sequelize.transaction();
+
+  try {
+    // Coba hapus thumbnail dari storage
+    if (subsgaleri.thumbnail) {
+      try {
+        await fileHelper.delete(subsgaleri.thumbnail);
+        console.log(`Deleted thumbnail: ${subsgaleri.thumbnail}`);
+      } catch (error) {
+        console.error(
+          `Failed to delete thumbnail ${subsgaleri.thumbnail}:`,
+          error.message
+        );
+        // Lanjutkan meskipun penghapusan file gagal
+      }
+    }
+
+    // Hapus semua record terkait di temp_subs_galeris
+    const tempSubsgaleri = await TempSubsgaleri.findAll({
+      where: { id_subs_galeri: subsgaleriId },
+    });
+
+    await Promise.all(
+      tempSubsgaleri.map(async (img) => {
+        try {
+          await fileHelper.delete(img.image);
+          console.log(`Deleted file: ${img.image}`);
+        } catch (error) {
+          console.error(`Failed to delete file ${img.image}:`, error.message);
+        }
+      })
+    );
+
+    await TempSubsgaleri.destroy({
+      where: { id_subs_galeri: subsgaleriId },
+      transaction,
+    });
+
+    // Hapus record di subs_galeris
+    await subsgaleri.destroy({ transaction });
+
+    await transaction.commit();
+
+    console.log(`Deleted subsgaleri with id: ${subsgaleriId}`);
+
+    res.status(204).json({
+      status: 'success',
+      data: null,
+    });
+  } catch (error) {
+    await transaction.rollback();
+    console.error('Error deleting subsgaleri:', {
+      message: error.message,
+      stack: error.stack,
+    });
+    return next(new AppError('Failed to delete subsgaleri', 500));
+  }
+});
