@@ -29,11 +29,11 @@ exports.createSubsnaskah = catchAsync(async (req, res, next) => {
   const { naskah, pengarang, kategori, summary, isi } = req.body;
   const { file } = req;
 
-  if(!naskah) {
+  if (!naskah) {
     return next(new AppError('Naskah is required', 400));
   }
 
-  if(!pengarang) {
+  if (!pengarang) {
     return next(new AppError('Pengarang is required', 400));
   }
 
@@ -59,7 +59,7 @@ exports.createSubsnaskah = catchAsync(async (req, res, next) => {
 
   res.status(201).json({
     status: 'success',
-    data: subsnaskah
+    data: subsnaskah,
   });
 });
 

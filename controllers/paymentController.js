@@ -57,7 +57,7 @@ exports.createToken = catchAsync(async (req, res, next) => {
     last_name: name[1] || '',
     email: user.email,
   };
-//update
+  //update
   const grossAmount = body.amount;
 
   const parameter = {
@@ -96,7 +96,7 @@ exports.createToken = catchAsync(async (req, res, next) => {
       },
     }
   );
-  console.log(response)
+  console.log(response);
 
   // Create payment history
   const cekOrderUserId = await Paymenthistory.findOne({
@@ -123,7 +123,7 @@ exports.createToken = catchAsync(async (req, res, next) => {
   await Paymenthistory.create({
     id_user: body.id_user,
     order_id: orderId,
-    type : body.type,
+    type: body.type,
     gross_amount: grossAmount,
     transaction_time: new Date(),
     transaction_status: 'pending',
@@ -205,8 +205,6 @@ exports.webhookTicket = catchAsync(async (req, res, next) => {
         payment_type: notification.payment_type,
       });
     }
-
-    
   }
 
   res.status(200).json({ status: 'Notification received' });
