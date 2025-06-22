@@ -35,11 +35,11 @@ const Tiket = sequelize.define(
     },
     nama_kategori_tiket: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     harga_kategori_tiket: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     jumlah_stok_tiket: {
       type: DataTypes.INTEGER,

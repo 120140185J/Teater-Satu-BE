@@ -40,8 +40,8 @@ exports.createTiket = catchAsync(async (req, res, next) => {
     !harga_tiket ||
     !tanggal_mulai_penjualan ||
     !tanggal_selesai_penjualan ||
-    !nama_kategori_tiket ||
-    !harga_kategori_tiket ||
+    // !nama_kategori_tiket ||
+    // !harga_kategori_tiket ||
     !jumlah_stok_tiket
   ) {
     return next(new AppError('Please provide all required fields', 400));
