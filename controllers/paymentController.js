@@ -144,7 +144,6 @@ exports.webhook = catchAsync(async (req, res, next) => {
       notification.transaction_status === 'settlement') &&
     notification.fraud_status === 'accept'
   ) {
-    // Do your business logic here
     console.log('Transaction Success: ', req.body);
 
     // Update Payment History
@@ -188,7 +187,6 @@ exports.webhookTicket = catchAsync(async (req, res, next) => {
       notification.transaction_status === 'settlement') &&
     notification.fraud_status === 'accept'
   ) {
-    // Do your business logic here
     console.log('Transaction Success: ', req.body);
 
     // Update Payment History
