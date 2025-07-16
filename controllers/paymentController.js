@@ -2,6 +2,7 @@ const axios = require('axios');
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const Paymenthistory = require('../models/paymenthistoryModel');
+const Tiket = require('../models/tiketModel');
 
 exports.getAllHistoryPayment = catchAsync(async (req, res, next) => {
   const paymentHistory = await Paymenthistory.findAll({
@@ -58,7 +59,23 @@ exports.createToken = catchAsync(async (req, res, next) => {
     email: user.email,
   };
   //update
-  const grossAmount = body.amount;
+  const jumlahTiket = body.jumlah_tiket || 1;
+  const idTiket = body.id_tiket;
+  const tiket = await Tiket.findByPk(idTiket);
+  const type = body.type || 'subscription';
+  let grossAmount = 0;
+  if (type === 'tiket') {
+    grossAmount = tiket.harga_tiket * jumlahTiket;
+  }
+  else if (type === 'subscription') {
+    grossAmount = 65000;
+  } 
+  else {
+    return res.status(400).json({
+      status: 'error',
+      message: 'Invalid payment type',
+    });
+  }
 
   const parameter = {
     transaction_details: {
