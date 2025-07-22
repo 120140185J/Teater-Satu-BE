@@ -1,11 +1,16 @@
-/* eslint-disable camelcase */
-const bcrypt = require('bcryptjs');
+// Fungsi kirim email lupa password
+const express = require('express');
+const router = express.Router();
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
 const User = require('../models/userModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
+const { sendEmail } = require('../utils/SendEmail');
+const bcrypt = require('bcryptjs');
+const { Op } = require('sequelize');
+
 
 const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -128,72 +133,100 @@ exports.restrictTo =
     next();
   };
 
+
+exports.forgotPassword = catchAsync(async (req, res, next) => {
+  const { email } = req.body;
+
+  // 1. Cek apakah user ada
+  const user = await User.findOne({ where: { email } });
+  if (!user) {
+    return next(new AppError('No user found with that email', 404));
+  }
+
+  // 2. Generate token
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+  // 3. Simpan ke user
+  user.password_reset_token = hashedToken;
+  user.password_reset_expires = new Date(Date.now() + 10 * 60 * 1000); // 10 menit
+  await user.save();
+
+  // 4. Kirim email
+  const resetURL = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
+  const message = `
+    <h2>Password Reset</h2>
+    <p>Click link below to reset your password:</p>
+    <a href="${resetURL}">${resetURL}</a>
+    <p>This link is valid for 10 minutes.</p>
+  `;
+
+  try {
+    await sendEmail({
+      to: user.email,
+      subject: 'Password Reset',
+      html: message,
+    });
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Reset link sent to email!',
+    });
+  } catch (err) {
+  console.error('ERROR SENDING EMAIL:', err.message);
+  console.error('FULL ERROR:', err);
+
+  user.password_reset_token = null;
+  user.password_reset_expires = null;
+  await user.save();
+
+  return next(new AppError('Failed to send email. Try again later.', 500));
+}
+});
+
+
 exports.resetPassword = catchAsync(async (req, res, next) => {
-  // get user based on the token
-  const hashedToken = crypto
-    .createHash('sha256')
-    .update(req.params.token)
-    .digest('hex');
+  const { token } = req.params;
+  const { password } = req.body;
 
+  if (!password || password.length < 6) {
+    return next(new AppError('Password must be at least 6 characters long.', 400));
+  }
+
+  // 1. Hash the token from params
+  const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+  // 2. Find user with matching token and token not expired
   const user = await User.findOne({
-    passwordResetToken: hashedToken,
-    passwordResetExpires: { $gt: Date.now() },
-  });
-  // if token has not expired, and there is user, set the new password
-  if (!user) {
-    return next(new AppError('Token is invalid or has expired', 400));
-  }
-
-  // update changedPasswordAt property for the user
-  user.password = req.body.password;
-  user.passwordConfirm = req.body.passwordConfirm;
-  user.passwordResetToken = undefined;
-  user.passwordResetExpires = undefined;
-
-  await user.save();
-
-  // log the user in, send JWT
-  createSendToken(user, 200, res);
-});
-
-exports.updatePassword = catchAsync(async (req, res, next) => {
-  // Pastikan password lama, id, dan password baru ada di request body
-  const { id, password_current, password } = req.body;
-
-  if (!id || !password_current || !password) {
-    return next(new AppError('Please provide all required fields.', 400));
-  }
-
-  // Cari user berdasarkan ID dan masukkan kolom password
-  const user = await User.findByPk(id, {
-    attributes: ['id', 'password'], // Pastikan kolom password diambil secara eksplisit
+    where: {
+      password_reset_token: hashedToken,
+      password_reset_expires: {
+        [Op.gt]: new Date(),
+      },
+    },
   });
 
-  // Validasi apakah user ditemukan
   if (!user) {
-    return next(new AppError('User not found.', 404));
+    return next(new AppError('Token is invalid or has expired.', 400));
   }
 
-  // Periksa apakah password lama cocok
-  const isPasswordCorrect = await user.matchPassword(
-    password_current,
-    user.password
-  );
-  if (!isPasswordCorrect) {
-    return next(new AppError('Your current password is wrong.', 401));
-  }
-
-  // Perbarui password bcrypt
-  const DEFAULT_SALT_ROUNDS = 10;
-  const encryptedPassword = await bcrypt.hash(
-    user.password,
-    DEFAULT_SALT_ROUNDS
-  );
-  user.password = encryptedPassword;
-
-  // Simpan user
+  // 3. Update password (hook beforeUpdate akan meng-hash password otomatis)
+  user.password = password;
+  user.password_reset_token = null;
+  user.password_reset_expires = null;
   await user.save();
 
-  // Kirim token JWT ke user
-  createSendToken(user, 200, res);
+  // 4. Generate JWT token
+  const newToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN,
+  });
+
+  // 5. Kirim response sukses
+  res.status(200).json({
+    status: 'success',
+    message: 'Password successfully reset.',
+    token: newToken,
+  });
 });
+
+

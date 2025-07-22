@@ -37,22 +37,27 @@ const User = sequelize.define(
       allowNull: true,
       defaultValue: null,
     },
+    password_reset_token: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    password_reset_expires: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
   },
   { timestamps: false }
 );
 
+// Method untuk cek password
 Model.prototype.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
+// Encrypt password before create
 const DEFAULT_SALT_ROUNDS = 10;
-
 User.addHook('beforeCreate', async (user) => {
-  const encryptedPassword = await bcrypt.hash(
-    user.password,
-    DEFAULT_SALT_ROUNDS
-  );
-  user.password = encryptedPassword;
+  user.password = await bcrypt.hash(user.password, DEFAULT_SALT_ROUNDS);
 });
 
 module.exports = User;

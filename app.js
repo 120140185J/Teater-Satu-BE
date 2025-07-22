@@ -2,6 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 
+const authRouter = require('./routes/authRoutes');
 const userRouter = require('./routes/userRoutes');
 const subsvideoRouter = require('./routes/subsvideoRoutes');
 const beritaRouter = require('./routes/beritaRoutes');
@@ -46,6 +47,7 @@ app.get('/', (req, res) => {
     message: 'Welcome to API',
   });
 });
+app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/beritas', beritaRouter);
 app.use('/api/v1/subsvideos', subsvideoRouter);
