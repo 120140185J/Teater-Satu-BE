@@ -11,7 +11,7 @@ const sendEmail = async ({ to, subject, html }) => {
   });
 
   await transporter.sendMail({
-    from: `"Your App Name" <${process.env.MAIL_USERNAME}>`,
+    from: `"Lupa Password" <${process.env.MAIL_USERNAME}>`,
     to,
     subject,
     html,

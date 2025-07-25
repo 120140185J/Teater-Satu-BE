@@ -147,21 +147,27 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   const resetToken = crypto.randomBytes(32).toString('hex');
   const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
 
-  // 3. Simpan ke user
+  console.log('🔐 Reset Token (raw to send via email):', resetToken);
+  console.log('🧂 Hashed Token (stored in DB):', hashedToken);
+
+  // 3. Simpan token & waktu kedaluwarsa ke database
   user.password_reset_token = hashedToken;
   user.password_reset_expires = new Date(Date.now() + 10 * 60 * 1000); // 10 menit
   await user.save();
 
-  // 4. Kirim email
+  // 4. Buat reset URL (gunakan backtick)
   const resetURL = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
+
+  // 5. Buat isi email (string HTML, bukan JSX)
   const message = `
     <h2>Password Reset</h2>
-    <p>Click link below to reset your password:</p>
-    <a href="${resetURL}">${resetURL}</a>
+    <p>Click the link below to reset your password:</p>
+    <a href="${resetURL}" target="_blank">${resetURL}</a>
     <p>This link is valid for 10 minutes.</p>
   `;
 
   try {
+    // 6. Kirim email
     await sendEmail({
       to: user.email,
       subject: 'Password Reset',
@@ -173,17 +179,17 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
       message: 'Reset link sent to email!',
     });
   } catch (err) {
-  console.error('ERROR SENDING EMAIL:', err.message);
-  console.error('FULL ERROR:', err);
+    console.error('❌ ERROR SENDING EMAIL:', err.message);
+    console.error('🧨 FULL ERROR:', err);
 
-  user.password_reset_token = null;
-  user.password_reset_expires = null;
-  await user.save();
+    // Kosongkan token jika gagal kirim
+    user.password_reset_token = null;
+    user.password_reset_expires = null;
+    await user.save();
 
-  return next(new AppError('Failed to send email. Try again later.', 500));
-}
+    return next(new AppError('Failed to send email. Try again later.', 500));
+  }
 });
-
 
 exports.resetPassword = catchAsync(async (req, res, next) => {
   const { token } = req.params;

@@ -45,6 +45,10 @@ const Tiket = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    tampilkan: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
   },
   { timestamps: true }
 );

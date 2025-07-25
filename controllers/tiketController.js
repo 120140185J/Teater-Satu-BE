@@ -31,6 +31,7 @@ exports.createTiket = catchAsync(async (req, res, next) => {
     nama_kategori_tiket,
     harga_kategori_tiket,
     jumlah_stok_tiket,
+    tampilkan,
   } = req.body;
 
   if (
@@ -40,8 +41,6 @@ exports.createTiket = catchAsync(async (req, res, next) => {
     !harga_tiket ||
     !tanggal_mulai_penjualan ||
     !tanggal_selesai_penjualan ||
-    // !nama_kategori_tiket ||
-    // !harga_kategori_tiket ||
     !jumlah_stok_tiket
   ) {
     return next(new AppError('Please provide all required fields', 400));
@@ -57,6 +56,7 @@ exports.createTiket = catchAsync(async (req, res, next) => {
     nama_kategori_tiket,
     harga_kategori_tiket,
     jumlah_stok_tiket,
+    tampilkan: typeof tampilkan === 'boolean' ? tampilkan : true, // default true
   });
 
   res.status(201).json({
@@ -76,6 +76,7 @@ exports.updateTiket = catchAsync(async (req, res, next) => {
     nama_kategori_tiket,
     harga_kategori_tiket,
     jumlah_stok_tiket,
+    tampilkan,
   } = req.body;
 
   const tiket = await Tiket.findByPk(req.params.id);
@@ -84,17 +85,17 @@ exports.updateTiket = catchAsync(async (req, res, next) => {
     return next(new AppError('No document found with that ID', 404));
   }
 
+  // Update hanya jika field tersedia
   if (nama_pertujukan) tiket.nama_pertujukan = nama_pertujukan;
   if (tanggal_pertujukan) tiket.tanggal_pertujukan = tanggal_pertujukan;
   if (tempat_pertujukan) tiket.tempat_pertujukan = tempat_pertujukan;
   if (harga_tiket) tiket.harga_tiket = harga_tiket;
-  if (tanggal_mulai_penjualan)
-    tiket.tanggal_mulai_penjualan = tanggal_mulai_penjualan;
-  if (tanggal_selesai_penjualan)
-    tiket.tanggal_selesai_penjualan = tanggal_selesai_penjualan;
+  if (tanggal_mulai_penjualan) tiket.tanggal_mulai_penjualan = tanggal_mulai_penjualan;
+  if (tanggal_selesai_penjualan) tiket.tanggal_selesai_penjualan = tanggal_selesai_penjualan;
   if (nama_kategori_tiket) tiket.nama_kategori_tiket = nama_kategori_tiket;
   if (harga_kategori_tiket) tiket.harga_kategori_tiket = harga_kategori_tiket;
   if (jumlah_stok_tiket) tiket.jumlah_stok_tiket = jumlah_stok_tiket;
+  if (typeof tampilkan === 'boolean') tiket.tampilkan = tampilkan;
 
   await tiket.save();
 
@@ -133,7 +134,11 @@ exports.buyTiketUser = catchAsync(async (req, res, next) => {
   const tiket = await Tiket.findByPk(id_tiket);
 
   if (!tiket) {
-    return next(new AppError('No document found with that ID', 404));
+    return next(new AppError('No ticket found with that ID', 404));
+  }
+
+  if (tiket.tampilkan === false) {
+    return next(new AppError('This ticket is not available for sale', 400));
   }
 
   if (tiket.jumlah_stok_tiket < jumlah_tiket) {
@@ -156,6 +161,7 @@ exports.buyTiketUser = catchAsync(async (req, res, next) => {
     message: 'Tiket berhasil dibeli',
   });
 });
+
 
 exports.getHistoryTiketUser = catchAsync(async (req, res, next) => {
   console.log('Accessing getHistoryTiketUser with id_user:', req.query.id_user);
