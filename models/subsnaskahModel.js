@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../utils/database');
 
 const Subsnaskah = sequelize.define(
-  'subs_naskah',
+  'subs_naskahs',
   {
     id: {
       type: DataTypes.UUID,

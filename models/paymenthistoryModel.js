@@ -3,7 +3,7 @@ const sequelize = require('../utils/database');
 const User = require('./userModel');
 
 const Paymenthistory = sequelize.define(
-  'Paymenthistory',
+  'payment_histories',
   {
     id: {
       type: DataTypes.UUID,

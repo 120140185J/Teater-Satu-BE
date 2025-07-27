@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../utils/database');
 
-const Landingpageimage = sequelize.define('Landingpageimage', {
+const Landingpageimage = sequelize.define('landingpageimages', {
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,

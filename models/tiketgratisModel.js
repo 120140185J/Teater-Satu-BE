@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../utils/database');
 
 const Tiketgratis = sequelize.define(
-  'Tiketgratis',
+  'tiketgratis',
   {
     id: {
       type: DataTypes.UUID,
@@ -17,7 +17,7 @@ const Tiketgratis = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    jumlahtiket : {
+    jumlahtiket: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -29,8 +29,6 @@ const Tiketgratis = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    
-    
   },
   { timestamps: false }
 );

@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../utils/database');
 
 const Subsvideo = sequelize.define(
-  'subs_video',
+  'subs_videos',
   {
     id: {
       type: DataTypes.UUID,
@@ -33,10 +33,10 @@ const Subsvideo = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
-  },
-//   {
-//     timestamps: true, // Enable timestamps (createdAt and updatedAt)
-//   }
+  }
+  //   {
+  //     timestamps: true, // Enable timestamps (createdAt and updatedAt)
+  //   }
 );
 
 module.exports = Subsvideo;

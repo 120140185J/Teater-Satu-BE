@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../utils/database');
 
 const Naskah = sequelize.define(
-  'Naskah',
+  'naskahs',
   {
     id: {
       type: DataTypes.UUID,
@@ -43,7 +43,7 @@ const Naskah = sequelize.define(
   },
   {
     timestamps: true,
-    tableName: 'Naskah',
+    tableName: 'naskahs',
   }
 );
 

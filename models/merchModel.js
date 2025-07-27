@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../utils/database');
 
 const Merch = sequelize.define(
-  'Merch',
+  'merchs',
   {
     id: {
       type: DataTypes.UUID,

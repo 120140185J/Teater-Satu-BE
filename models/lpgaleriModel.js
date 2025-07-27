@@ -1,8 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../utils/database');
 
-const lpgaleri = sequelize.define(
-  'Lpgaleri', {
+const lpgaleri = sequelize.define('lpgaleris', {
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,

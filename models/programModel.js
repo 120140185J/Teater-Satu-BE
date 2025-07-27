@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../utils/database');
 
 const Program = sequelize.define(
-  'Program',
+  'programs',
   {
     id: {
       type: DataTypes.UUID,

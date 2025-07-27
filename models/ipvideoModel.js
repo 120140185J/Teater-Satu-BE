@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../utils/database');
 
 const Ipvideo = sequelize.define(
-  'Ipvideo',
+  'ipvideos',
   {
     id: {
       type: DataTypes.UUID,
@@ -10,12 +10,12 @@ const Ipvideo = sequelize.define(
       primaryKey: true,
     },
     video1: {
-        type: DataTypes.STRING,
-        allowNull: false,
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     video2: {
-        type: DataTypes.STRING,
-        allowNull: false,
+      type: DataTypes.STRING,
+      allowNull: false,
     },
   },
   { timestamps: true }

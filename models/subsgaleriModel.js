@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../utils/database');
 
 const Subsgaleri = sequelize.define(
-  'subs_galeri',
+  'subs_galeris',
   {
     id: {
       type: DataTypes.UUID,

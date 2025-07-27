@@ -3,7 +3,7 @@ const sequelize = require('../utils/database');
 const Subsgaleri = require('./subsgaleriModel');
 
 const TempSubsgaleri = sequelize.define(
-  'temp_subs_galeri',
+  'temp_subs_galeris',
   {
     id: {
       type: DataTypes.UUID,
