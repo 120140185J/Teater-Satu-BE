@@ -24,6 +24,7 @@ router
   .route('/:id')
   .get(tiketController.getTiket)
   .put(tiketController.updateTiket)
+  .patch(tiketController.patchTiket)
   .delete(tiketController.deleteTiket);
 
 module.exports = router;

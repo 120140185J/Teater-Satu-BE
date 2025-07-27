@@ -1,7 +1,6 @@
 /* eslint-disable camelcase */
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
-
 const handlerFactory = require('./handlerFactory');
 const Tiket = require('../models/tiketModel');
 const HistoryBuyTiket = require('../models/historyBuyTiketModel');
@@ -10,6 +9,7 @@ require('dotenv').config();
 
 exports.getAllTiket = catchAsync(async (req, res, next) => {
   const tiket = await Tiket.findAll({
+    where: { tampilkan: true }, // Hanya ambil tiket dengan tampilkan: true
     order: [['createdAt', 'DESC']],
   });
 
@@ -85,18 +85,43 @@ exports.updateTiket = catchAsync(async (req, res, next) => {
     return next(new AppError('No document found with that ID', 404));
   }
 
-  // Update hanya jika field tersedia
   if (nama_pertujukan) tiket.nama_pertujukan = nama_pertujukan;
   if (tanggal_pertujukan) tiket.tanggal_pertujukan = tanggal_pertujukan;
   if (tempat_pertujukan) tiket.tempat_pertujukan = tempat_pertujukan;
   if (harga_tiket) tiket.harga_tiket = harga_tiket;
-  if (tanggal_mulai_penjualan) tiket.tanggal_mulai_penjualan = tanggal_mulai_penjualan;
-  if (tanggal_selesai_penjualan) tiket.tanggal_selesai_penjualan = tanggal_selesai_penjualan;
+  if (tanggal_mulai_penjualan)
+    tiket.tanggal_mulai_penjualan = tanggal_mulai_penjualan;
+  if (tanggal_selesai_penjualan)
+    tiket.tanggal_selesai_penjualan = tanggal_selesai_penjualan;
   if (nama_kategori_tiket) tiket.nama_kategori_tiket = nama_kategori_tiket;
   if (harga_kategori_tiket) tiket.harga_kategori_tiket = harga_kategori_tiket;
   if (jumlah_stok_tiket) tiket.jumlah_stok_tiket = jumlah_stok_tiket;
   if (typeof tampilkan === 'boolean') tiket.tampilkan = tampilkan;
 
+  await tiket.save();
+
+  res.status(200).json({
+    status: 'success',
+    data: tiket,
+  });
+});
+
+exports.patchTiket = catchAsync(async (req, res, next) => {
+  const { tampilkan } = req.body;
+
+  if (typeof tampilkan !== 'boolean') {
+    return next(
+      new AppError('Please provide a boolean value for tampilkan', 400)
+    );
+  }
+
+  const tiket = await Tiket.findByPk(req.params.id);
+
+  if (!tiket) {
+    return next(new AppError('No document found with that ID', 404));
+  }
+
+  tiket.tampilkan = tampilkan;
   await tiket.save();
 
   res.status(200).json({
@@ -161,7 +186,6 @@ exports.buyTiketUser = catchAsync(async (req, res, next) => {
     message: 'Tiket berhasil dibeli',
   });
 });
-
 
 exports.getHistoryTiketUser = catchAsync(async (req, res, next) => {
   console.log('Accessing getHistoryTiketUser with id_user:', req.query.id_user);

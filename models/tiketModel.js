@@ -47,6 +47,7 @@ const Tiket = sequelize.define(
     },
     tampilkan: {
       type: DataTypes.BOOLEAN,
+      allowNull: false,
       defaultValue: true,
     },
   },

@@ -7,10 +7,9 @@ const { promisify } = require('util');
 const User = require('../models/userModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
-const { sendEmail } = require('../utils/SendEmail');
+const { sendEmail } = require('../utils/sendEmail');
 const bcrypt = require('bcryptjs');
 const { Op } = require('sequelize');
-
 
 const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -133,7 +132,6 @@ exports.restrictTo =
     next();
   };
 
-
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   const { email } = req.body;
 
@@ -145,7 +143,10 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
   // 2. Generate token
   const resetToken = crypto.randomBytes(32).toString('hex');
-  const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+  const hashedToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
 
   console.log('🔐 Reset Token (raw to send via email):', resetToken);
   console.log('🧂 Hashed Token (stored in DB):', hashedToken);
@@ -196,7 +197,9 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   const { password } = req.body;
 
   if (!password || password.length < 6) {
-    return next(new AppError('Password must be at least 6 characters long.', 400));
+    return next(
+      new AppError('Password must be at least 6 characters long.', 400)
+    );
   }
 
   // 1. Hash the token from params
@@ -234,5 +237,3 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     token: newToken,
   });
 });
-
-
