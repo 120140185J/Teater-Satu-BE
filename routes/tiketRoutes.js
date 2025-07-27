@@ -20,6 +20,8 @@ router
   .get(tiketController.getAllTiket)
   .post(tiketController.createTiket);
 
+router.route('/admin/tickets').get(tiketController.getAllTiketAdmin);
+
 router
   .route('/:id')
   .get(tiketController.getTiket)

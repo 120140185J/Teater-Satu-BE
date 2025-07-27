@@ -9,7 +9,19 @@ require('dotenv').config();
 
 exports.getAllTiket = catchAsync(async (req, res, next) => {
   const tiket = await Tiket.findAll({
-    where: { tampilkan: true }, // Hanya ambil tiket dengan tampilkan: true
+    where: { tampilkan: true },
+    order: [['createdAt', 'DESC']],
+  });
+
+  res.status(200).json({
+    status: 'success',
+    results: tiket.length,
+    data: tiket,
+  });
+});
+
+exports.getAllTiketAdmin = catchAsync(async (req, res, next) => {
+  const tiket = await Tiket.findAll({
     order: [['createdAt', 'DESC']],
   });
 
@@ -56,7 +68,7 @@ exports.createTiket = catchAsync(async (req, res, next) => {
     nama_kategori_tiket,
     harga_kategori_tiket,
     jumlah_stok_tiket,
-    tampilkan: typeof tampilkan === 'boolean' ? tampilkan : true, // default true
+    tampilkan: typeof tampilkan === 'boolean' ? tampilkan : true,
   });
 
   res.status(201).json({
