@@ -1,10 +1,11 @@
-const { DataTypes, Model } = require('sequelize');
+const { DataTypes } = require('sequelize');
 const bcrypt = require('bcryptjs');
 const sequelize = require('../utils/database');
 
 const User = sequelize.define(
-  'users',
+  'User',
   {
+    // --- Field Anda tetap sama ---
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
@@ -33,7 +34,7 @@ const User = sequelize.define(
       allowNull: true,
     },
     subscription_time: {
-      type: DataTypes.DATE,
+      type: 'TIMESTAMP',
       allowNull: true,
       defaultValue: null,
     },
@@ -42,22 +43,19 @@ const User = sequelize.define(
       allowNull: true,
     },
     password_reset_expires: {
-      type: DataTypes.DATE,
+      type: 'TIMESTAMP',
       allowNull: true,
     },
   },
-  { timestamps: false }
+  {
+    // ✅ BLOK HOOKS UNTUK PASSWORD SUDAH DIHAPUS DARI SINI
+    timestamps: false,
+  }
 );
 
-// Method untuk cek password
-Model.prototype.matchPassword = async function (enteredPassword) {
+// Method untuk mencocokkan password tetap diperlukan untuk proses login
+User.prototype.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
-
-// Encrypt password before create
-const DEFAULT_SALT_ROUNDS = 10;
-User.addHook('beforeCreate', async (user) => {
-  user.password = await bcrypt.hash(user.password, DEFAULT_SALT_ROUNDS);
-});
 
 module.exports = User;

@@ -123,72 +123,65 @@ exports.protect = catchAsync(async (req, res, next) => {
 
 exports.restrictTo =
   (...roles) =>
-  (req, _, next) => {
-    if (!roles.includes(req.user.role)) {
-      return next(
-        new AppError('You do not have permission to perform this action', 403)
-      );
-    }
-    next();
-  };
+    (req, _, next) => {
+      if (!roles.includes(req.user.role)) {
+        return next(
+          new AppError('You do not have permission to perform this action', 403)
+        );
+      }
+      next();
+    };
 
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   const { email } = req.body;
 
-  // 1. Cek apakah user ada
+  // 1. Cari pengguna berdasarkan email
   const user = await User.findOne({ where: { email } });
   if (!user) {
-    return next(new AppError('No user found with that email', 404));
+    return next(new AppError('Tidak ada pengguna dengan email tersebut.', 404));
   }
 
-  // 2. Generate token
+  // 2. Buat token reset mentah
   const resetToken = crypto.randomBytes(32).toString('hex');
-  const hashedToken = crypto
+
+  // 3. Hash token untuk disimpan di DB dan atur waktu kadaluarsa
+  user.password_reset_token = crypto
     .createHash('sha256')
     .update(resetToken)
     .digest('hex');
-
-  console.log('🔐 Reset Token (raw to send via email):', resetToken);
-  console.log('🧂 Hashed Token (stored in DB):', hashedToken);
-
-  // 3. Simpan token & waktu kedaluwarsa ke database
-  user.password_reset_token = hashedToken;
-  user.password_reset_expires = new Date(Date.now() + 10 * 60 * 1000); // 10 menit
+    
+  user.password_reset_expires = new Date(Date.now() + 15 * 60 * 1000); // Berlaku 15 menit
+  
   await user.save();
 
-  // 4. Buat reset URL (gunakan backtick)
+  // 4. Kirim token MENTAH ke email pengguna
   const resetURL = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
 
-  // 5. Buat isi email (string HTML, bukan JSX)
   const message = `
-    <h2>Password Reset</h2>
-    <p>Click the link below to reset your password:</p>
-    <a href="${resetURL}" target="_blank">${resetURL}</a>
-    <p>This link is valid for 10 minutes.</p>
+    <h2>Reset Password</h2>
+    <p>Klik tombol di bawah untuk mengganti password Anda:</p>
+    <a href="${resetURL}" target="_blank" style="padding: 10px 20px; background-color: #00b894; color: white; text-decoration: none; border-radius: 5px;">Reset Password</a>
+    <p>Link ini hanya berlaku selama 15 menit.</p>
   `;
 
   try {
-    // 6. Kirim email
     await sendEmail({
       to: user.email,
-      subject: 'Password Reset',
+      subject: 'Link Reset Password Anda (Berlaku 15 Menit)',
       html: message,
     });
 
     res.status(200).json({
       status: 'success',
-      message: 'Reset link sent to email!',
+      message: 'Link reset password telah dikirim ke email Anda.',
     });
   } catch (err) {
-    console.error('❌ ERROR SENDING EMAIL:', err.message);
-    console.error('🧨 FULL ERROR:', err);
-
-    // Kosongkan token jika gagal kirim
+    // Jika email gagal dikirim, hapus token dari DB
     user.password_reset_token = null;
     user.password_reset_expires = null;
     await user.save();
 
-    return next(new AppError('Failed to send email. Try again later.', 500));
+    return next(new AppError('Gagal mengirim email. Silakan coba lagi nanti.', 500));
   }
 });
 
@@ -197,15 +190,13 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   const { password } = req.body;
 
   if (!password || password.length < 6) {
-    return next(
-      new AppError('Password must be at least 6 characters long.', 400)
-    );
+    return next(new AppError('Password minimal harus 6 karakter.', 400));
   }
 
-  // 1. Hash the token from params
+  // 1. Hash token dari URL untuk dicocokkan dengan yang di DB
   const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
 
-  // 2. Find user with matching token and token not expired
+  // 2. Cari pengguna dengan token yang valid dan belum kadaluarsa
   const user = await User.findOne({
     where: {
       password_reset_token: hashedToken,
@@ -214,26 +205,29 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
       },
     },
   });
-
+  
   if (!user) {
-    return next(new AppError('Token is invalid or has expired.', 400));
+    return next(new AppError('Token tidak valid atau sudah kadaluarsa.', 400));
   }
 
-  // 3. Update password (hook beforeUpdate akan meng-hash password otomatis)
-  user.password = password;
+  // 3. (PERBAIKAN) Hash password baru secara manual sebelum disimpan
+  user.password = await bcrypt.hash(password, 12);
+  
+  // 4. Hapus data token reset dari database
   user.password_reset_token = null;
   user.password_reset_expires = null;
+
+  // 5. Simpan perubahan ke database
   await user.save();
 
-  // 4. Generate JWT token
+  // 6. Buat token login baru dan kirim ke pengguna
   const newToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN,
+    expiresIn: process.env.JWT_EXPIRE_IN,
   });
 
-  // 5. Kirim response sukses
   res.status(200).json({
     status: 'success',
-    message: 'Password successfully reset.',
+    message: 'Password berhasil di-reset.',
     token: newToken,
   });
 });
