@@ -5,7 +5,6 @@ const sequelize = require('../utils/database');
 const User = sequelize.define(
   'User',
   {
-    // --- Field Anda tetap sama ---
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
@@ -52,6 +51,7 @@ const User = sequelize.define(
     timestamps: false,
   }
 );
+
 
 // Method untuk mencocokkan password tetap diperlukan untuk proses login
 User.prototype.matchPassword = async function (enteredPassword) {

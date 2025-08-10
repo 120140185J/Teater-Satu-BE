@@ -29,12 +29,22 @@ const createSendToken = (user, statusCode, res) => {
   });
 };
 
+// authController.js
+
+// ✅ GANTI FUNGSI SIGNUP LAMA ANDA DENGAN YANG INI
 exports.signup = catchAsync(async (req, res, next) => {
+  // 1. Ambil password dari request body
+  const { password } = req.body;
+
+  // 2. TAMBAHKAN BARIS INI untuk hashing password 🔐
+  const hashedPassword = await bcrypt.hash(password, 12);
+
+  // 3. UBAH BAGIAN INI untuk menggunakan password yang sudah di-hash
   const newUser = await User.create({
     name: req.body.name,
     email: req.body.email,
     role: req.body.role,
-    password: req.body.password,
+    password: hashedPassword, // Gunakan variabel hashedPassword, bukan req.body.password
   });
 
   createSendToken(newUser, 201, res);
