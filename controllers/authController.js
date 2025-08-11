@@ -1,4 +1,3 @@
-// Fungsi kirim email lupa password
 const express = require('express');
 
 const bcrypt = require('bcryptjs');
