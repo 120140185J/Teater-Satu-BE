@@ -13,7 +13,7 @@ const runCronJob = async () => {
       .filter((payment) => {
         if (!payment.transaction_time) return false;
         const transactionTime = new Date(payment.transaction_time).getTime();
-        return now - transactionTime > 24 * 60 * 60 * 1000;
+        return now - transactionTime > 5 * 60 * 1000; // 5 menit * 60 detik * 1000 milidetik
       })
       .map((payment) =>
         Promise.all([

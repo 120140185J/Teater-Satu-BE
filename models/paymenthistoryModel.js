@@ -39,6 +39,10 @@ const Paymenthistory = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    expires_at: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
     type: {
       type: DataTypes.STRING,
       allowNull: true,
