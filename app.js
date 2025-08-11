@@ -8,6 +8,7 @@ const userRouter = require('./routes/userRoutes');
 const paymentRouter = require('./routes/paymentRoutes');
 const kategoriRouter = require('./routes/kategoriRoutes');
 const imageRouter = require('./routes/imageRoutes');
+const analyticsRouter = require('./routes/analyticsRoutes');
 
 //subscription
 const subsvideoRouter = require('./routes/subsvideoRoutes');
@@ -64,6 +65,7 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/payment', paymentRouter);
 app.use('/api/v1/image', imageRouter);
 app.use('/api/v1/kategoris', kategoriRouter);
+app.use('/api/v1/analytics', analyticsRouter);
 
 //subscription
 app.use('/api/v1/subsvideos', subsvideoRouter);
