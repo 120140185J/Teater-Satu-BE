@@ -56,7 +56,7 @@ exports.updateGaleri = catchAsync(async (req, res, next) => {
   const galeri = await Galeri.findByPk(req.params.id);
 
   if (!galeri) {
-    return next(new AppError('No document found with that ID', 404));
+    return next(new AppError('Akun tidak dapat ditemukan atau konten tidak ada', 404));
   }
 
   // Update the berita record with the new data
@@ -79,7 +79,7 @@ exports.getGaleri = catchAsync(async (req, res, next) => {
   const galeri = await Galeri.findByPk(req.params.id);
 
   if (!galeri) {
-    return next(new AppError('No document found with that ID', 404));
+    return next(new AppError('Akun tidak dapat ditemukan atau konten tidak ada', 404));
   }
 
   res.status(200).json({

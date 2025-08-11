@@ -44,7 +44,7 @@ exports.updateProfile = catchAsync(async (req, res, next) => {
   const profile = await Profile.findByPk(req.params.id);
 
   if (!profile) {
-    return next(new AppError('No document found with that ID', 404));
+    return next(new AppError('Akun tidak dapat ditemukan atau konten tidak ada', 404));
   }
 
   // Update the berita record with the new data

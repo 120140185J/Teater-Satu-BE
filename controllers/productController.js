@@ -64,7 +64,7 @@ exports.updateProduct = catchAsync(async (req, res, next) => {
   const product = await Product.findByPk(req.params.id);
 
   if (!product) {
-    return next(new AppError('No document found with that ID', 404));
+    return next(new AppError('Akun tidak dapat ditemukan atau konten tidak ada', 404));
   }
 
   // Update the berita record with the new data
@@ -99,7 +99,7 @@ exports.getProduct = catchAsync(async (req, res, next) => {
   const product = await Product.findByPk(req.params.id);
 
   if (!product) {
-    return next(new AppError('No document found with that ID', 404));
+    return next(new AppError('Akun tidak dapat ditemukan atau konten tidak ada', 404));
   }
 
   res.status(200).json({

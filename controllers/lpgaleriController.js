@@ -35,7 +35,7 @@ exports.updateLpgaleri = catchAsync(async (req, res, next) => {
   });
 
   if (!lpgaleri) {
-    return next(new AppError('No document found with that ID', 404));
+    return next(new AppError('Akun tidak dapat ditemukan atau konten tidak ada', 404));
   }
 
   // Update the berita record with the new data
@@ -51,7 +51,7 @@ exports.getLpgaleri = catchAsync(async (req, res, next) => {
   const lpgaleri = await Lpgaleri.findByPk(req.params.id);
 
   if (!lpgaleri) {
-    return next(new AppError('No document found with that ID', 404));
+    return next(new AppError('Akun tidak dapat ditemukan atau konten tidak ada', 404));
   }
 
   res.status(200).json({

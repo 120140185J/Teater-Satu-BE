@@ -94,7 +94,7 @@ exports.updateTiket = catchAsync(async (req, res, next) => {
   const tiket = await Tiket.findByPk(req.params.id);
 
   if (!tiket) {
-    return next(new AppError('No document found with that ID', 404));
+    return next(new AppError('Akun tidak dapat ditemukan atau konten tidak ada', 404));
   }
 
   if (nama_pertujukan) tiket.nama_pertujukan = nama_pertujukan;
@@ -130,7 +130,7 @@ exports.patchTiket = catchAsync(async (req, res, next) => {
   const tiket = await Tiket.findByPk(req.params.id);
 
   if (!tiket) {
-    return next(new AppError('No document found with that ID', 404));
+    return next(new AppError('Akun tidak dapat ditemukan atau konten tidak ada', 404));
   }
 
   tiket.tampilkan = tampilkan;
@@ -146,7 +146,7 @@ exports.getTiket = catchAsync(async (req, res, next) => {
   const tiket = await Tiket.findByPk(req.params.id);
 
   if (!tiket) {
-    return next(new AppError('No document found with that ID', 404));
+    return next(new AppError('Akun tidak dapat ditemukan atau konten tidak ada', 404));
   }
 
   res.status(200).json({

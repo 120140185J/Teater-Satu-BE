@@ -89,7 +89,7 @@ exports.updateBeritaPatner = catchAsync(async (req, res, next) => {
   const beritapatner = await BeritaPatner.findByPk(req.params.id);
 
   if (!beritapatner) {
-    return next(new AppError('No document found with that ID', 404));
+    return next(new AppError('Akun tidak dapat ditemukan atau konten tidak ada', 404));
   }
 
   // Update text fields if provided
@@ -139,7 +139,7 @@ exports.getBeritaPatner = catchAsync(async (req, res, next) => {
   const beritapatner = await BeritaPatner.findByPk(req.params.id, {});
 
   if (!beritapatner) {
-    return next(new AppError('No document found with that ID', 404));
+    return next(new AppError('Akun tidak dapat ditemukan atau konten tidak ada', 404));
   }
 
   res.status(200).json({

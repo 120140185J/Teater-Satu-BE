@@ -10,7 +10,7 @@ exports.deleteOne = (Model) =>
     });
 
     if (!doc) {
-      return next(new AppError('No document found with that ID', 404));
+      return next(new AppError('Akun tidak dapat ditemukan atau konten tidak ada', 404));
     }
     res.status(204).json({
       status: 'success',
@@ -28,7 +28,7 @@ exports.updateOne = (Model) =>
     });
 
     if (!doc) {
-      return next(new AppError('No document found with that ID', 404));
+      return next(new AppError('Akun tidak dapat ditemukan atau konten tidak ada', 404));
     }
 
     await doc.update(req.body);
@@ -69,7 +69,7 @@ exports.getOne = (Model) =>
     const doc = await Model.findByPk(req.params.id);
 
     if (!doc) {
-      return next(new AppError('No document found with that ID', 404));
+      return next(new AppError('Akun tidak dapat ditemukan atau konten tidak ada', 404));
     }
 
     res.status(200).json({

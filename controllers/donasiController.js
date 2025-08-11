@@ -63,7 +63,7 @@ exports.updateDonasi = catchAsync(async (req, res, next) => {
   const donasi = await Donasi.findByPk(req.params.id);
 
   if (!donasi) {
-    return next(new AppError('No document found with that ID', 404));
+    return next(new AppError('Akun tidak dapat ditemukan atau konten tidak ada', 404));
   }
 
   // Update text fields if provided
@@ -93,7 +93,7 @@ exports.getDonasi = catchAsync(async (req, res, next) => {
   const donasi = await Donasi.findByPk(req.params.id);
 
   if (!donasi) {
-    return next(new AppError('No document found with that ID', 404));
+    return next(new AppError('Akun tidak dapat ditemukan atau konten tidak ada', 404));
   }
 
   res.status(200).json({

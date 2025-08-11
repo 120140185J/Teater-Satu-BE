@@ -91,7 +91,7 @@ exports.updateIpvideo = catchAsync(async (req, res, next) => {
 
   const ipvideo = await Ipvideo.findByPk(req.params.id);
   if (!ipvideo)
-    return next(new AppError('No document found with that ID', 404));
+    return next(new AppError('Akun tidak dapat ditemukan atau konten tidak ada', 404));
 
   // Video1: Gunakan file baru jika ada, atau URL dari body, atau biarkan yang lama
   if (files.file1) {
@@ -127,7 +127,7 @@ exports.updateIpvideo = catchAsync(async (req, res, next) => {
 exports.getIpvideo = catchAsync(async (req, res, next) => {
   const ipvideo = await Ipvideo.findByPk(req.params.id);
   if (!ipvideo)
-    return next(new AppError('No document found with that ID', 404));
+    return next(new AppError('Akun tidak dapat ditemukan atau konten tidak ada', 404));
 
   res.status(200).json({
     status: 'success',
@@ -139,7 +139,7 @@ exports.getIpvideo = catchAsync(async (req, res, next) => {
 exports.deleteIpvideo = catchAsync(async (req, res, next) => {
   const ipvideo = await Ipvideo.findByPk(req.params.id);
   if (!ipvideo)
-    return next(new AppError('No document found with that ID', 404));
+    return next(new AppError('Akun tidak dapat ditemukan atau konten tidak ada', 404));
 
   // Hapus video dari Cloudinary jika ada
   if (ipvideo.video1) {

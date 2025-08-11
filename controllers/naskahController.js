@@ -91,7 +91,7 @@ exports.updateNaskah = catchAsync(async (req, res, next) => {
 
   const naskah = await Naskah.findByPk(req.params.id);
   if (!naskah) {
-    return next(new AppError('No document found with that ID', 404));
+    return next(new AppError('Akun tidak dapat ditemukan atau konten tidak ada', 404));
   }
 
   if (
@@ -138,7 +138,7 @@ exports.updateNaskah = catchAsync(async (req, res, next) => {
 exports.getNaskah = catchAsync(async (req, res, next) => {
   const naskah = await Naskah.findByPk(req.params.id);
   if (!naskah) {
-    return next(new AppError('No document found with that ID', 404));
+    return next(new AppError('Akun tidak dapat ditemukan atau konten tidak ada', 404));
   }
 
   res.status(200).json({
@@ -150,7 +150,7 @@ exports.getNaskah = catchAsync(async (req, res, next) => {
 exports.deleteNaskah = catchAsync(async (req, res, next) => {
   const naskah = await Naskah.findByPk(req.params.id);
   if (!naskah) {
-    return next(new AppError('No document found with that ID', 404));
+    return next(new AppError('Akun tidak dapat ditemukan atau konten tidak ada', 404));
   }
 
   if (naskah.fotoThumbnail) await fileHelper.upload(null, naskah.fotoThumbnail);

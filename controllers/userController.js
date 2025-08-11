@@ -68,7 +68,7 @@ exports.updateUserPhoto = catchAsync(async (req, res, next) => {
   const data = {};
 
   if (!user) {
-    return next(new AppError('No document found with that ID', 404));
+    return next(new AppError('Akun tidak dapat ditemukan atau konten tidak ada', 404));
   }
 
   if (file) {
@@ -138,7 +138,7 @@ exports.updateUser = catchAsync(async (req, res, next) => {
 
   const user = await User.findByPk(req.params.id);
   if (!user) {
-    return next(new AppError('No document found with that ID', 404));
+    return next(new AppError('Akun tidak dapat ditemukan atau konten tidak ada', 404));
   }
 
   const updates = {
