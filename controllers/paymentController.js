@@ -66,11 +66,9 @@ exports.createToken = catchAsync(async (req, res, next) => {
   let grossAmount = 0;
   if (type === 'tiket') {
     grossAmount = tiket.harga_tiket * jumlahTiket;
-  }
-  else if (type === 'subscription') {
+  } else if (type === 'subscription') {
     grossAmount = 65000;
-  } 
-  else {
+  } else {
     return res.status(400).json({
       status: 'error',
       message: 'Invalid payment type',
@@ -161,7 +159,6 @@ exports.webhook = catchAsync(async (req, res, next) => {
       notification.transaction_status === 'settlement') &&
     notification.fraud_status === 'accept'
   ) {
-    
     console.log('Transaction Success: ', req.body);
 
     // Update Payment History
