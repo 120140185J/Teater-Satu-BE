@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const sequelize = require('../utils/database');
 
 const User = sequelize.define(
-  'User',
+  'users',
   {
     id: {
       type: DataTypes.UUID,
@@ -51,7 +51,6 @@ const User = sequelize.define(
     timestamps: false,
   }
 );
-
 
 // Method untuk mencocokkan password tetap diperlukan untuk proses login
 User.prototype.matchPassword = async function (enteredPassword) {
