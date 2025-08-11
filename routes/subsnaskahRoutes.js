@@ -1,16 +1,29 @@
 const express = require('express');
-const subsnaskah = require('../controllers/subsnaskahController');
+const subsnaskahController = require('../controllers/subsnaskahController');
 
 const router = express.Router();
+
+// Semua middleware otentikasi (authController.protect) telah dihapus.
+
 router
   .route('/')
-  .get(subsnaskah.getAllSubsnaskah)
-  .post(subsnaskah.uploadSubsnaskahPhoto, subsnaskah.createSubsnaskah);
+  .get(subsnaskahController.getAllSubsnaskah)
+  // Middleware upload file dari controller tetap diperlukan untuk memproses file
+  .post(
+    subsnaskahController.uploadSubsnaskahFiles,
+    subsnaskahController.createSubsnaskah
+  );
+
+// Route untuk download harus didefinisikan sebelum route '/:id'
+router.route('/:id/download').get(subsnaskahController.downloadNaskah);
 
 router
   .route('/:id')
-  .get(subsnaskah.getSubsnaskah)
-  .patch(subsnaskah.uploadSubsnaskahPhoto, subsnaskah.updateSubsnaskah)
-  .delete(subsnaskah.deleteSubsnaskah);
+  .get(subsnaskahController.getSubsnaskah)
+  .patch(
+    subsnaskahController.uploadSubsnaskahFiles,
+    subsnaskahController.updateSubsnaskah
+  )
+  .delete(subsnaskahController.deleteSubsnaskah);
 
 module.exports = router;
